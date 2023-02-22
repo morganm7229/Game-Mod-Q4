@@ -34,7 +34,7 @@ const int	LAND_RETURN_TIME			= 300;
 const int	FOCUS_TIME					= 200;
 const int	FOCUS_GUI_TIME				= 300;
 const int	FOCUS_USABLE_TIME			= 100;
-
+//Looks like the spot to start putting code in
 const int	MAX_WEAPONS					= 16;
 const int	MAX_AMMO					= 16;
 const int	CARRYOVER_FLAG_AMMO			= 0x40000000;
@@ -207,6 +207,17 @@ public:
 	int						clip[ MAX_WEAPONS ];
 	int						powerupEndTime[ POWERUP_MAX ];
 	int						weaponMods[ MAX_WEAPONS ];
+//TOONTOWN WEAPONS GAGS YES YES YES
+	int						toonUpExp;
+	int						trapExp;
+	int						lureExp;
+	int						throwExp;
+	int						squirtExp;
+	int						zapExp;
+	int						soundExp;
+	int						dropExp;
+	int						doodleExp;
+	int						diceExp;
 
  	// multiplayer
  	int						ammoPredictTime;
@@ -242,6 +253,16 @@ public:
 	int						MaxAmmoForAmmoClass( idPlayer *owner, const char *ammo_classname ) const;
 	int						AmmoIndexForWeaponClass( const char *weapon_classname, int *ammoRequired = NULL );
 	const char *			AmmoClassForWeaponClass( const char *weapon_classname);
+	void					addToonUpExp(void);
+	void					addTrapExp(void);
+	void					addLureExp(void);
+	void					addThrowExp(void);
+	void					addSquirtExp(void);
+	void					addZapExp(void);
+	void					addSoundExp(void);
+	void					addDropExp(void);
+	void					addDoodleExp(void);
+	void					addDiceExp(void);
 
 // RAVEN BEGIN
 // mekberg: if the player can pick up the ammo at this time
@@ -609,6 +630,7 @@ public:
 
 	virtual bool			HandleSingleGuiCommand( idEntity *entityGui, idLexer *src );
 	bool					GuiActive( void ) { return focusType == FOCUS_GUI; }
+
 
 // RITUAL BEGIN
 // squirrel: Mode-agnostic buymenus

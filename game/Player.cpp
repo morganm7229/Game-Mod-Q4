@@ -987,10 +987,140 @@ bool idInventory::Give( idPlayer *owner, const idDict &spawnArgs, const char *st
 
 	return true;
 }
+/*
+===============
+idInventory::addThrowExp
+===============
+*/
+void idInventory::addToonUpExp() {
+	if (toonUpExp > 10000) {
+		toonUpExp = 0;
+	}
+	toonUpExp += 1;
+	gameLocal.Printf("Toon Up is at %d \n", toonUpExp);
+}
 
 /*
 ===============
-idInventoy::Drop
+idInventory::addThrowExp
+===============
+*/
+void idInventory::addThrowExp() {
+	if (trapExp > 10000) {
+		trapExp = 0;
+	}
+	trapExp += 1;
+	gameLocal.Printf("Trap is at %d \n", trapExp);
+}
+
+/*
+===============
+idInventory::addLureExp
+===============
+*/
+void idInventory::addLureExp() {
+	if (lureExp > 10000) {
+		lureExp = 0;
+	}
+	lureExp += 1;
+	gameLocal.Printf("Lure is at %d \n", lureExp);
+}
+
+/*
+===============
+idInventory::addThrowExp
+===============
+*/
+void idInventory::addThrowExp() {
+	if (throwExp > 10000) {
+		throwExp = 0;
+	}
+	throwExp += 1;
+	gameLocal.Printf("Throw is at %d \n", throwExp);
+}
+
+/*
+===============
+idInventory::addSquirtExp
+===============
+*/
+void idInventory::addSquirtExp() {
+	if (squirtExp > 10000) {
+		squirtExp = 0;
+	}
+	squirtExp += 1;
+	gameLocal.Printf("Squirt is at %d \n", squirtExp);
+}
+
+/*
+===============
+idInventory::addZapExp
+===============
+*/
+void idInventory::addZapExp() {
+	if (zapExp > 10000) {
+		zapExp = 0;
+	}
+	zapExp += 1;
+	gameLocal.Printf("Zap is at %d \n", zapExp);
+}
+
+/*
+===============
+idInventory::addSoundExp
+===============
+*/
+void idInventory::addSoundExp() {
+	if (soundExp > 10000) {
+		soundExp = 0;
+	}
+	soundExp += 1;
+	gameLocal.Printf("Sound is at %d \n", soundExp);
+}
+
+/*
+===============
+idInventory::addDropExp
+===============
+*/
+void idInventory::addDropExp() {
+	if (dropExp > 10000) {
+		dropExp = 0;
+	}
+	dropExp += 1;
+	gameLocal.Printf("Drop is at %d \n", dropExp);
+}
+
+/*
+===============
+idInventory::addDoodleExp
+===============
+*/
+void idInventory::addDoodleExp() {
+	if (doodleExp > 10000) {
+		doodleExp = 0;
+	}
+	doodleExp += 1;
+	gameLocal.Printf("Doodle is at %d \n", doodleExp);
+}
+
+/*
+===============
+idInventory::addDiceExp
+===============
+*/
+void idInventory::addDiceExp() {
+	if (diceExp > 10000) {
+		diceExp = 0;
+	}
+	diceExp += 1;
+	gameLocal.Printf("Dice is at %d \n", diceExp);
+}
+
+
+/*
+===============
+idInventory::Drop
 ===============
 */
 void idInventory::Drop( const idDict &spawnArgs, const char *weapon_classname, int weapon_index ) {

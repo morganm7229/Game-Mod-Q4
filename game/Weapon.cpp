@@ -2502,10 +2502,15 @@ void rvWeapon::AddToClip ( int amount ) {
 rvWeapon::Attack
 ================
 */
-void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuseOffset, float power ) {
+//Ok so I think this is where I can do this? If I can pass in what gun is being fired, I can determine what gag it should be, right? right?????? Right???????????? 0-11 I think?
+void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuseOffset, float power, int gag ) {
 	idVec3 muzzleOrigin;
 	idMat3 muzzleAxis;
-	
+	if (gag == 0) {
+		gameLocal.Printf("DOOGIS");
+		idPlayer *player = gameLocal.GetLocalPlayer();
+		player->inventory.addThrowExp();
+	}
 	if ( !viewModel ) {
 		common->Warning( "NULL viewmodel %s\n", __FUNCTION__ );
 		return;
