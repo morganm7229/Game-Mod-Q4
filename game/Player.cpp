@@ -8701,6 +8701,7 @@ void idPlayer::PerformImpulse( int impulse ) {
 			idVec3 testLocation = idVec3(9198.61, -8265.5, 196.25);
 			idAngles testAngles = idAngles(0, 0, 0);
 			gameLocal.GetLocalPlayer()->teleportToLocation(testLocation, testAngles);
+			idActor testActor = idActor();
 			break;
 		}
 		case IMPULSE_42: {
