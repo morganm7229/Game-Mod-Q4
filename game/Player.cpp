@@ -989,7 +989,7 @@ bool idInventory::Give( idPlayer *owner, const idDict &spawnArgs, const char *st
 }
 /*
 ===============
-idInventory::addThrowExp
+idInventory::addToonUpxp
 ===============
 */
 void idInventory::addToonUpExp() {
@@ -1002,10 +1002,10 @@ void idInventory::addToonUpExp() {
 
 /*
 ===============
-idInventory::addThrowExp
+idInventory::addTrapExp
 ===============
 */
-void idInventory::addThrowExp() {
+void idInventory::addTrapExp() {
 	if (trapExp > 10000) {
 		trapExp = 0;
 	}
@@ -8697,6 +8697,12 @@ void idPlayer::PerformImpulse( int impulse ) {
 			idFuncRadioChatter::RepeatLast();
 			break;
 		}
+		case IMPULSE_42: {
+			gameLocal.Printf(gameLocal.GetLocalPlayer()->GetEyePosition().ToString());
+			gameLocal.Printf("\n");
+			break;
+		}
+
 
 // RITUAL BEGIN
 // squirrel: Mode-agnostic buymenus
