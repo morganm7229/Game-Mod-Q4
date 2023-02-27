@@ -8697,6 +8697,12 @@ void idPlayer::PerformImpulse( int impulse ) {
 			idFuncRadioChatter::RepeatLast();
 			break;
 		}
+		case IMPULSE_41: {
+			idVec3 testLocation = idVec3(9198.61, -8265.5, 196.25);
+			idAngles testAngles = idAngles(0, 0, 0);
+			gameLocal.GetLocalPlayer()->teleportToLocation(testLocation, testAngles);
+			break;
+		}
 		case IMPULSE_42: {
 			gameLocal.Printf(gameLocal.GetLocalPlayer()->GetEyePosition().ToString());
 			gameLocal.Printf("\n");
@@ -10542,6 +10548,36 @@ void idPlayer::Teleport( const idVec3 &origin, const idAngles &angles, idEntity 
  			gameLocal.KillBox( this, true );
  		}
 	}
+}
+
+/*
+===========
+idPlayer::teleportToLocation
+============
+*/
+void idPlayer::teleportToLocation(const idVec3& origin, const idAngles& angles) {
+
+	
+	SetOrigin(origin + idVec3(0, 0, CM_CLIP_EPSILON));
+	if (!gameLocal.isMultiplayer) {
+		SetOrigin(origin);
+	}
+
+	// clear the ik heights so model doesn't appear in the wrong place
+	walkIK.EnableAll();
+
+	GetPhysics()->SetLinearVelocity(vec3_origin);
+	SetViewAngles(angles);
+	/*
+	legsYaw = 0.0f;
+	idealLegsYaw = 0.0f;
+	oldViewYaw = viewAngles.yaw;*/
+
+	// don't do any smoothing with this snapshot
+	predictedFrame = gameLocal.framenum;
+
+	UpdateVisuals();
+
 }
 
 /*

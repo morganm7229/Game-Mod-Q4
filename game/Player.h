@@ -511,6 +511,7 @@ public:
 	virtual void			ProjectHeadOverlay( const idVec3 &point, const idVec3 &dir, float size, const char *decal );
  							// use exitEntityNum to specify a teleport with private camera view and delayed exit
  	virtual void			Teleport( const idVec3 &origin, const idAngles &angles, idEntity *destination );
+	virtual void			teleportToLocation(const idVec3& origin, const idAngles& angles);
 
 	virtual void			GetDebugInfo ( debugInfoProc_t proc, void* userData );
 
