@@ -73,6 +73,7 @@ const int IMPULSE_29			= 29;			// vote no
 const int IMPULSE_40			= 40;			// repeast last radio chatter
 const int IMPULSE_41			= 41;			// teleport?
 const int IMPULSE_42			= 42;			// get location?
+const int IMPULSE_43			= 43;			//Spawn test enemy/start
 
 // RAVEN BEGIN
 // bdube: added flashlight

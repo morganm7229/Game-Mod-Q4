@@ -987,17 +987,34 @@ bool idInventory::Give( idPlayer *owner, const idDict &spawnArgs, const char *st
 
 	return true;
 }
+
 /*
 ===============
-idInventory::addToonUpxp
+idPlayer::weaponProcessing
 ===============
 */
-void idInventory::addToonUpExp() {
+void idPlayer::weaponProcessing(int weaponFired) {
+	switch (weaponFired) {
+		case 0:
+			inventory.addThrowExp(hud);
+			break;
+	}
+}
+
+/*
+===============
+idInventory::addToonUpExp
+===============
+*/
+void idInventory::addToonUpExp(idUserInterface* _hud) {
 	if (toonUpExp > 10000) {
 		toonUpExp = 0;
 	}
 	toonUpExp += 1;
 	gameLocal.Printf("Toon Up is at %d \n", toonUpExp);
+	idStr newExpString = "";
+	sprintf(newExpString, "%d", toonUpExp);
+	_hud->SetStateString("toonUpPoints", newExpString);
 }
 
 /*
@@ -1005,12 +1022,16 @@ void idInventory::addToonUpExp() {
 idInventory::addTrapExp
 ===============
 */
-void idInventory::addTrapExp() {
+void idInventory::addTrapExp(idUserInterface* _hud) {
 	if (trapExp > 10000) {
 		trapExp = 0;
 	}
 	trapExp += 1;
 	gameLocal.Printf("Trap is at %d \n", trapExp);
+	idStr newExpString = "";
+	sprintf(newExpString, "%d", trapExp);
+	_hud->SetStateString("trapPoints", newExpString);
+
 }
 
 /*
@@ -1018,12 +1039,15 @@ void idInventory::addTrapExp() {
 idInventory::addLureExp
 ===============
 */
-void idInventory::addLureExp() {
+void idInventory::addLureExp(idUserInterface* _hud) {
 	if (lureExp > 10000) {
 		lureExp = 0;
 	}
 	lureExp += 1;
 	gameLocal.Printf("Lure is at %d \n", lureExp);
+	idStr newExpString = "";
+	sprintf(newExpString, "%d", lureExp);
+	_hud->SetStateString("lurePoints", newExpString);
 }
 
 /*
@@ -1031,12 +1055,17 @@ void idInventory::addLureExp() {
 idInventory::addThrowExp
 ===============
 */
-void idInventory::addThrowExp() {
+void idInventory::addThrowExp(idUserInterface* _hud) {
 	if (throwExp > 10000) {
 		throwExp = 0;
 	}
 	throwExp += 1;
 	gameLocal.Printf("Throw is at %d \n", throwExp);
+	idStr newExpString = "";
+	gameLocal.Printf("GOT HERE! \n");
+	sprintf(newExpString, "%d", throwExp);
+	gameLocal.Printf("ALSO GOT HERE! \n");
+	_hud->SetStateString("throwPoints", newExpString);
 }
 
 /*
@@ -1044,12 +1073,15 @@ void idInventory::addThrowExp() {
 idInventory::addSquirtExp
 ===============
 */
-void idInventory::addSquirtExp() {
+void idInventory::addSquirtExp(idUserInterface* _hud) {
 	if (squirtExp > 10000) {
 		squirtExp = 0;
 	}
 	squirtExp += 1;
 	gameLocal.Printf("Squirt is at %d \n", squirtExp);
+	idStr newExpString = "";
+	sprintf(newExpString, "%d", squirtExp);
+	_hud->SetStateString("squirtPoints", newExpString);
 }
 
 /*
@@ -1057,12 +1089,15 @@ void idInventory::addSquirtExp() {
 idInventory::addZapExp
 ===============
 */
-void idInventory::addZapExp() {
+void idInventory::addZapExp(idUserInterface* _hud) {
 	if (zapExp > 10000) {
 		zapExp = 0;
 	}
 	zapExp += 1;
 	gameLocal.Printf("Zap is at %d \n", zapExp);
+	idStr newExpString = "";
+	sprintf(newExpString, "%d", zapExp);
+	_hud->SetStateString("zapPoints", newExpString);
 }
 
 /*
@@ -1070,12 +1105,15 @@ void idInventory::addZapExp() {
 idInventory::addSoundExp
 ===============
 */
-void idInventory::addSoundExp() {
+void idInventory::addSoundExp(idUserInterface* _hud) {
 	if (soundExp > 10000) {
 		soundExp = 0;
 	}
 	soundExp += 1;
 	gameLocal.Printf("Sound is at %d \n", soundExp);
+	idStr newExpString = "";
+	sprintf(newExpString, "%d", soundExp);
+	_hud->SetStateString("soundPoints", newExpString);
 }
 
 /*
@@ -1083,12 +1121,15 @@ void idInventory::addSoundExp() {
 idInventory::addDropExp
 ===============
 */
-void idInventory::addDropExp() {
+void idInventory::addDropExp(idUserInterface* _hud) {
 	if (dropExp > 10000) {
 		dropExp = 0;
 	}
 	dropExp += 1;
 	gameLocal.Printf("Drop is at %d \n", dropExp);
+	idStr newExpString = "";
+	sprintf(newExpString, "%d", dropExp);
+	_hud->SetStateString("dropPoints", newExpString);
 }
 
 /*
@@ -1096,12 +1137,15 @@ void idInventory::addDropExp() {
 idInventory::addDoodleExp
 ===============
 */
-void idInventory::addDoodleExp() {
+void idInventory::addDoodleExp(idUserInterface* _hud) {
 	if (doodleExp > 10000) {
 		doodleExp = 0;
 	}
 	doodleExp += 1;
 	gameLocal.Printf("Doodle is at %d \n", doodleExp);
+	idStr newExpString = "";
+	sprintf(newExpString, "%d", doodleExp);
+	_hud->SetStateString("doodlePoints", newExpString);
 }
 
 /*
@@ -1109,12 +1153,15 @@ void idInventory::addDoodleExp() {
 idInventory::addDiceExp
 ===============
 */
-void idInventory::addDiceExp() {
+void idInventory::addDiceExp(idUserInterface* _hud) {
 	if (diceExp > 10000) {
 		diceExp = 0;
 	}
 	diceExp += 1;
 	gameLocal.Printf("Dice is at %d \n", diceExp);
+	idStr newExpString = "";
+	sprintf(newExpString, "%d", diceExp);
+	_hud->SetStateString("dicePoints", newExpString);
 }
 
 
@@ -3565,6 +3612,10 @@ void idPlayer::UpdateHudStats( idUserInterface *_hud ) {
 	if ( weapon ) {
 		UpdateHudAmmo( _hud );
 	}
+
+	//Testing the GUIs via Steven the GUI - Kehoe if you see this I swear I am mentally stable
+	//_hud->SetStateString("jackary", "DOOGIS");
+	
 	
 	_hud->StateChanged( gameLocal.time );
 }
@@ -8701,7 +8752,6 @@ void idPlayer::PerformImpulse( int impulse ) {
 			idVec3 testLocation = idVec3(9198.61, -8265.5, 196.25);
 			idAngles testAngles = idAngles(0, 0, 0);
 			gameLocal.GetLocalPlayer()->teleportToLocation(testLocation, testAngles);
-			idActor testActor = idActor();
 			break;
 		}
 		case IMPULSE_42: {
@@ -8709,6 +8759,19 @@ void idPlayer::PerformImpulse( int impulse ) {
 			gameLocal.Printf("\n");
 			break;
 		}
+		case IMPULSE_43: {
+			/*
+			gameLocal.Printf("You hit k");
+			gameLocal.Printf("\n");
+			rvMonsterGrunt testActor = rvMonsterGrunt();
+			testActor.SetCombatModel();
+			idVec3 testLocation = idVec3(10325.03, -6962.78, 6.95);
+			testActor.Spawn();
+			testActor.SetOrigin(testLocation);
+			*/
+			break;
+		}
+
 
 
 // RITUAL BEGIN

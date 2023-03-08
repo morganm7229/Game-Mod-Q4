@@ -253,16 +253,16 @@ public:
 	int						MaxAmmoForAmmoClass( idPlayer *owner, const char *ammo_classname ) const;
 	int						AmmoIndexForWeaponClass( const char *weapon_classname, int *ammoRequired = NULL );
 	const char *			AmmoClassForWeaponClass( const char *weapon_classname);
-	void					addToonUpExp(void);
-	void					addTrapExp(void);
-	void					addLureExp(void);
-	void					addThrowExp(void);
-	void					addSquirtExp(void);
-	void					addZapExp(void);
-	void					addSoundExp(void);
-	void					addDropExp(void);
-	void					addDoodleExp(void);
-	void					addDiceExp(void);
+	void					addToonUpExp(idUserInterface* _hud);
+	void					addTrapExp(idUserInterface* _hud);
+	void					addLureExp(idUserInterface* _hud);
+	void					addThrowExp(idUserInterface* _hud);
+	void					addSquirtExp(idUserInterface* _hud);
+	void					addZapExp(idUserInterface* _hud);
+	void					addSoundExp(idUserInterface* _hud);
+	void					addDropExp(idUserInterface* _hud);
+	void					addDoodleExp(idUserInterface* _hud);
+	void					addDiceExp(idUserInterface* _hud);
 
 // RAVEN BEGIN
 // mekberg: if the player can pick up the ammo at this time
@@ -473,6 +473,7 @@ public:
 	void					SpawnFromSpawnSpot( void );
 	void					SpawnToPoint( const idVec3	&spawn_origin, const idAngles &spawn_angles );
 	void					SetClipModel( bool forceSpectatorBBox = false );	// spectator mode uses a different bbox size
+	void					weaponProcessing(int weaponFired);
 
 	void					SavePersistantInfo( void );
 	void					RestorePersistantInfo( void );

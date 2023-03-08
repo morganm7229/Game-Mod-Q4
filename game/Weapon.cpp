@@ -2507,9 +2507,9 @@ void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuse
 	idVec3 muzzleOrigin;
 	idMat3 muzzleAxis;
 	if (gag == 0) {
-		gameLocal.Printf("DOOGIS");
+		gameLocal.Printf("DOOGIS \n");
 		idPlayer *player = gameLocal.GetLocalPlayer();
-		player->inventory.addThrowExp();
+		player->weaponProcessing(gag);
 	}
 	if ( !viewModel ) {
 		common->Warning( "NULL viewmodel %s\n", __FUNCTION__ );
