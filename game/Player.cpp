@@ -8752,6 +8752,16 @@ void idPlayer::PerformImpulse( int impulse ) {
 			idVec3 testLocation = idVec3(9198.61, -8265.5, 196.25);
 			idAngles testAngles = idAngles(0, 0, 0);
 			gameLocal.GetLocalPlayer()->teleportToLocation(testLocation, testAngles);
+			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_dmg", "");
+			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_gauntlet", "");
+			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_grenadelauncher", "");
+			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_hyperblaster", "");
+			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_lightninggun", "");
+			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_machinegun", "");
+			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_nailgun", "");
+			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_napalmgun", "");
+			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_railgun", "");
+			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_rocketlauncher", "");
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_shotgun", "");
 			break;
 		}
