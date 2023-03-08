@@ -2506,7 +2506,7 @@ rvWeapon::Attack
 void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuseOffset, float power, int gag ) {
 	idVec3 muzzleOrigin;
 	idMat3 muzzleAxis;
-	if (gag == 0) {
+	if (gag >= 0 && gag <= 11) {
 		gameLocal.Printf("DOOGIS \n");
 		idPlayer *player = gameLocal.GetLocalPlayer();
 		player->weaponProcessing(gag);

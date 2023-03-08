@@ -996,8 +996,34 @@ idPlayer::weaponProcessing
 void idPlayer::weaponProcessing(int weaponFired) {
 	switch (weaponFired) {
 		case 0:
+			inventory.addToonUpExp(hud);
+			break;
+		case 6:
+			inventory.addTrapExp(hud);
+			break;
+		case 11:
+			inventory.addLureExp(hud);
+			break;
+		case 4:
 			inventory.addThrowExp(hud);
 			break;
+		case 3:
+			inventory.addSquirtExp(hud);
+			break;
+		case 7:
+			inventory.addZapExp(hud);
+			break;
+		case 10:
+			inventory.addSoundExp(hud);
+			break;
+		case 9:
+			inventory.addDropExp(hud);
+			break;
+		case 1:
+			inventory.addDoodleExp(hud);
+			break;
+		case 8:
+			inventory.addDiceExp(hud);
 	}
 }
 
@@ -8756,7 +8782,6 @@ void idPlayer::PerformImpulse( int impulse ) {
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_gauntlet", "");
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_grenadelauncher", "");
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_hyperblaster", "");
-			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_lightninggun", "");
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_machinegun", "");
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_nailgun", "");
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_napalmgun", "");
