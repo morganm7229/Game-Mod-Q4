@@ -192,6 +192,21 @@ typedef enum {
 
 const int	ASYNC_PLAYER_TOURNEY_STATUS_BITS = idMath::BitsForInteger( PTS_NUM_STATES );
 
+class idCog {
+public:
+	int						maxHealth;
+	int						currentHealth;
+	idStr					name;
+	idStr					attackOne;
+	idStr					attackTwo;
+	idStr					attackThree;
+	void					spawn(int maxHealth, idStr name, idStr attackOne, idStr attackTwo, idStr attackThree, idUserInterface* _hud, int cogNum);
+	void					takeDamage(int damage, idUserInterface* _hud);
+	void					attack(idUserInterface* _hud);
+	void					die();
+
+};
+
 class idInventory {
 public:
 	int						maxHealth;
@@ -321,6 +336,8 @@ public:
 	int						buttonMask;
 	int						oldButtons;
 	int						oldFlags;
+	int						cogOneExists;
+	int						cogTwoExists;
 
 	int						lastHitTime;			// last time projectile fired by player hit target
 	int						lastSavingThrowTime;	// for the "free miss" effect

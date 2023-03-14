@@ -195,6 +195,36 @@ const idVec4 defaultHitscanTint( 0.4f, 1.0f, 0.4f, 1.0f );
 
 /*
 ==============
+idCog::Spawn
+==============
+*/
+void idCog::spawn(int maxHealth, idStr name, idStr attackOne, idStr attackTwo, idStr attackThree, idUserInterface* _hud, int cogNum) {
+	this->maxHealth = maxHealth;
+	this->name = name;
+	this->attackOne = attackOne;
+	this->attackTwo = attackTwo;
+	this->attackThree = attackThree;
+	if (cogNum == 1) {
+		idStr maxHealthString = "";
+		sprintf(maxHealthString, "%d", maxHealth);
+		_hud->SetStateString("enemyOneName", name);
+		_hud->SetStateString("enemyOneHealth", maxHealthString);
+		idPlayer* player = gameLocal.GetLocalPlayer();
+		player->cogOneExists = 1;
+	}
+	
+}
+
+/*
+==============
+idCog::Attack
+==============
+*/
+void idCog::attack(idUserInterface* _hud) {
+
+}
+/*
+==============
 idInventory::Clear
 ==============
 */
@@ -8788,6 +8818,8 @@ void idPlayer::PerformImpulse( int impulse ) {
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_railgun", "");
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_rocketlauncher", "");
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_shotgun", "");
+			idCog testCog = idCog();
+			testCog.spawn(20, "Flunky", "Watercooler", "Clip-on Tie", "Shredder", hud, 1);
 			break;
 		}
 		case IMPULSE_42: {
