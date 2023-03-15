@@ -211,6 +211,16 @@ void idCog::spawn(int maxHealth, idStr name, idStr attackOne, idStr attackTwo, i
 		_hud->SetStateString("enemyOneHealth", maxHealthString);
 		idPlayer* player = gameLocal.GetLocalPlayer();
 		player->cogOneExists = 1;
+		attack(_hud);
+
+	}
+	else {
+		idStr maxHealthString = "";
+		sprintf(maxHealthString, "%d", maxHealth);
+		_hud->SetStateString("enemyTwoName", name);
+		_hud->SetStateString("enemyTwoHealth", maxHealthString);
+		idPlayer* player = gameLocal.GetLocalPlayer();
+		player->cogOneExists = 2;
 	}
 	
 }
@@ -221,7 +231,13 @@ idCog::Attack
 ==============
 */
 void idCog::attack(idUserInterface* _hud) {
-
+	int damage = rand() % 5 + 1;
+	idStr dmgStr = "";
+	sprintf(dmgStr, "%d", damage);
+	idStr toHealthBox = name + " used " + attackOne + " and dealt " + dmgStr + " damage.";
+	_hud->SetStateString("textBoxText", toHealthBox);
+	idPlayer* player = gameLocal.GetLocalPlayer();
+	player->Event_SetHealth(player->health - damage);
 }
 /*
 ==============

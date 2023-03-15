@@ -1138,7 +1138,9 @@ private:
 	void					Event_ApplyImpulse			( idEntity* ent, idVec3 &point, idVec3 &impulse	);
 
 	// mekberg:	added sethealth
+public:
 	void					Event_SetHealth					( float newHealth );
+private:
 	void					Event_SetArmor					( float newArmor );
 
 	void					Event_SetExtraProjPassEntity( idEntity* _extraProjPassEntity );
