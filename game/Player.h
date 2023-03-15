@@ -322,6 +322,9 @@ public:
 
 	class idPlayerView		playerView;			// handles damage kicks and effects
 
+	int						target;
+	int						wavesCompleted;
+	int						jellybeans;
 	bool					alreadyDidTeamAnnouncerSound;
 	bool					noclip;
 	bool					godmode;

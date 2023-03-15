@@ -211,7 +211,6 @@ void idCog::spawn(int maxHealth, idStr name, idStr attackOne, idStr attackTwo, i
 		_hud->SetStateString("enemyOneHealth", maxHealthString);
 		idPlayer* player = gameLocal.GetLocalPlayer();
 		player->cogOneExists = 1;
-		attack(_hud);
 
 	}
 	else {
@@ -8834,8 +8833,14 @@ void idPlayer::PerformImpulse( int impulse ) {
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_railgun", "");
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_rocketlauncher", "");
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_shotgun", "");
-			idCog testCog = idCog();
-			testCog.spawn(20, "Flunky", "Watercooler", "Clip-on Tie", "Shredder", hud, 1);
+			target = 1;
+			hud->SetStateString("target", "1");
+			jellybeans = 0;
+			hud->SetStateString("playerJBs", "0");
+			idCog cogOne = idCog();
+			cogOne.spawn(20, "Flunky", "Watercooler", "Clip-on Tie", "Shredder", hud, 1);
+			idCog cogTwo = idCog();
+			cogTwo.spawn(20, "Tightwad", "Bounce Check", "Watercooler", "Freeze Assets", hud, 2);
 			break;
 		}
 		case IMPULSE_42: {
@@ -8844,15 +8849,14 @@ void idPlayer::PerformImpulse( int impulse ) {
 			break;
 		}
 		case IMPULSE_43: {
-			/*
-			gameLocal.Printf("You hit k");
-			gameLocal.Printf("\n");
-			rvMonsterGrunt testActor = rvMonsterGrunt();
-			testActor.SetCombatModel();
-			idVec3 testLocation = idVec3(10325.03, -6962.78, 6.95);
-			testActor.Spawn();
-			testActor.SetOrigin(testLocation);
-			*/
+			if (target == 1) {
+				target = 2;
+				hud->SetStateString("target", "2");
+			}
+			else {
+				target = 1;
+				hud->SetStateString("target", "1");
+			}
 			break;
 		}
 
