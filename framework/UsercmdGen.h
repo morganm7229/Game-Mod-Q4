@@ -74,6 +74,13 @@ const int IMPULSE_40			= 40;			// repeast last radio chatter
 const int IMPULSE_41			= 41;			// teleport?
 const int IMPULSE_42			= 42;			// get location?
 const int IMPULSE_43			= 43;			//Spawn test enemy/start
+const int IMPULSE_44			= 44;			//Buy Pet One
+const int IMPULSE_45			= 45;			//Buy Pet Two
+const int IMPULSE_46			= 46;			//Buy Pet Three
+const int IMPULSE_47			= 47;			//Buy Pet Four
+const int IMPULSE_48			= 48;			//Buy Pet Five
+const int IMPULSE_49			= 49;			//Next Wave
+
 
 // RAVEN BEGIN
 // bdube: added flashlight

@@ -198,12 +198,15 @@ const idVec4 defaultHitscanTint( 0.4f, 1.0f, 0.4f, 1.0f );
 idCog::Spawn
 ==============
 */
-void idCog::spawn(int maxHealth, idStr name, idStr attackOne, idStr attackTwo, idStr attackThree, idUserInterface* _hud, int cogNum) {
-	this->maxHealth = maxHealth;
-	this->name = name;
-	this->attackOne = attackOne;
-	this->attackTwo = attackTwo;
-	this->attackThree = attackThree;
+void idCog::spawn(int newMaxHealth, idStr newName, idStr newAttackOne, idStr newAttackTwo, idStr newAttackThree, idUserInterface* _hud, int cogNum) {
+	maxHealth = newMaxHealth;
+	currentHealth = maxHealth;
+	name = newName;
+	attackOne = newAttackOne;
+	attackTwo = newAttackTwo;
+	attackThree = newAttackThree;
+	trapped = 0;
+	lured = 0;
 	if (cogNum == 1) {
 		idStr maxHealthString = "";
 		sprintf(maxHealthString, "%d", maxHealth);
@@ -211,6 +214,7 @@ void idCog::spawn(int maxHealth, idStr name, idStr attackOne, idStr attackTwo, i
 		_hud->SetStateString("enemyOneHealth", maxHealthString);
 		idPlayer* player = gameLocal.GetLocalPlayer();
 		player->cogOneExists = 1;
+		player->textBoxString = player->textBoxString + "A " + name + " has spawned! \n";
 
 	}
 	else {
@@ -220,6 +224,7 @@ void idCog::spawn(int maxHealth, idStr name, idStr attackOne, idStr attackTwo, i
 		_hud->SetStateString("enemyTwoHealth", maxHealthString);
 		idPlayer* player = gameLocal.GetLocalPlayer();
 		player->cogOneExists = 2;
+		player->textBoxString = player->textBoxString + "A " + name + " has spawned! \n";
 	}
 	
 }
@@ -230,14 +235,68 @@ idCog::Attack
 ==============
 */
 void idCog::attack(idUserInterface* _hud) {
-	int damage = rand() % 5 + 1;
-	idStr dmgStr = "";
-	sprintf(dmgStr, "%d", damage);
-	idStr toHealthBox = name + " used " + attackOne + " and dealt " + dmgStr + " damage.";
-	_hud->SetStateString("textBoxText", toHealthBox);
-	idPlayer* player = gameLocal.GetLocalPlayer();
-	player->Event_SetHealth(player->health - damage);
+	if (currentHealth > 0) {
+		int attackChoice = rand() % 3 + 1;
+		int damage = rand() % 5 + 1;
+		idStr dmgStr = "";
+		idStr toTextBox = "";
+		sprintf(dmgStr, "%d", damage);
+		if (attackChoice == 1) {
+			toTextBox = name + " used " + attackOne + " and dealt " + dmgStr + " damage. \n";
+		}
+		else if (attackChoice == 2) {
+			toTextBox = name + " used " + attackTwo + " and dealt " + dmgStr + " damage. \n";
+		}
+		else {
+			toTextBox = name + " used " + attackThree + " and dealt " + dmgStr + " damage. \n";
+		}
+		idPlayer* player = gameLocal.GetLocalPlayer();
+		player->textBoxString = player->textBoxString + toTextBox;
+		player->Event_SetHealth(player->health - damage);
+	}
 }
+
+/*
+==============
+idCog::takeDamage
+==============
+*/
+void idCog::takeDamage(int damage, idUserInterface* _hud) {
+	currentHealth = currentHealth - damage;
+	idPlayer* player = gameLocal.GetLocalPlayer();
+	if (player->target == 1) {
+		if (currentHealth <= 0) {
+			currentHealth = 0;
+			_hud->SetStateString("enemyOneHealth", "0");
+			player->textBoxString = player->textBoxString + name + " has died! \n";
+		}
+		else {
+			idStr currentHealthString = "";
+			sprintf(currentHealthString, "%d", currentHealth);
+			idStr damageString = "";
+			sprintf(damageString, "%d", damage);
+			//player->textBoxString = player->textBoxString + name + " has taken " + damageString + " points of damage! \n";
+			_hud->SetStateString("enemyOneHealth", currentHealthString);
+		}
+	}
+	else if (player->target == 2) {
+		if (currentHealth <= 0) {
+			currentHealth = 0;
+			_hud->SetStateString("enemyTwoHealth", "0");
+			player->textBoxString = player->textBoxString + name + " has died! \n";
+		}
+		else {
+			idStr currentHealthString = "";
+			sprintf(currentHealthString, "%d", currentHealth);
+			idStr damageString = "";
+			sprintf(damageString, "%d", damage);
+			//player->textBoxString = player->textBoxString + name + " has taken " + damageString + " points of damage! \n";
+			_hud->SetStateString("enemyTwoHealth", currentHealthString);
+		}
+	}
+
+}
+
 /*
 ==============
 idInventory::Clear
@@ -1039,39 +1098,452 @@ idPlayer::weaponProcessing
 ===============
 */
 void idPlayer::weaponProcessing(int weaponFired) {
+	textBoxString = "";
+	accRoll = rand() % 100 + 1;
+	idStr accString = "";
+	sprintf(accString, "%d", accRoll);
+	textBoxString = textBoxString + "Your accuracy is " + accString + "\n";
 	switch (weaponFired) {
 		case 0:
-			inventory.addToonUpExp(hud);
+			doToonUp();
 			break;
 		case 6:
-			inventory.addTrapExp(hud);
+			doTrap();
 			break;
 		case 11:
-			inventory.addLureExp(hud);
+			doLure();
 			break;
 		case 4:
-			inventory.addThrowExp(hud);
+			doThrow();
 			break;
 		case 3:
-			inventory.addSquirtExp(hud);
+			doSquirt();
 			break;
 		case 7:
-			inventory.addZapExp(hud);
+			doZap();
 			break;
 		case 10:
-			inventory.addSoundExp(hud);
+			doSound();
 			break;
 		case 9:
-			inventory.addDropExp(hud);
+			doDrop();
 			break;
 		case 1:
-			inventory.addDoodleExp(hud);
+			doDoodle();
 			break;
 		case 8:
 			inventory.addDiceExp(hud);
+			break;
+	}
+	for (int i = 0; i < MAX_AMMOTYPES; i++) {
+		inventory.ammo[i] = inventory.MaxAmmoForAmmoClass(gameLocal.GetLocalPlayer(), rvWeapon::GetAmmoNameForIndex(i));
+		// RAVEN END		
+	}
+	cogOne.attack(hud);
+	cogTwo.attack(hud);
+	if (cogOne.currentHealth == 0 && cogTwo.currentHealth == 0) {
+		textBoxString = textBoxString + "Wave cleared! \n";
+		jellybeans = jellybeans + 10;
+		hud->SetStateInt("playerJBs", jellybeans);
+		waves = waves + 1;
+		hud->SetStateInt("waves", waves);
+	}
+	hud->SetStateString("textBoxText", textBoxString);
+	textBoxString = "";
+}
+
+/*
+===============
+idPlayer::doToonUp
+===============
+*/
+void idPlayer::doToonUp() {
+	inventory.addToonUpExp(hud);
+	if (inventory.toonUpExp >= 3) {
+		idPlayer* player = gameLocal.GetLocalPlayer();
+		player->Event_SetHealth(player->health + 40);
+		textBoxString = textBoxString + "You have been healed for 40 hp! \n";
+	}
+	else {
+		idPlayer* player = gameLocal.GetLocalPlayer();
+		player->Event_SetHealth(player->health + 20);
+		textBoxString = textBoxString + "You have been healed for 20 hp! \n";
 	}
 }
 
+/*
+===============
+idPlayer::doTrap
+===============
+*/
+void idPlayer::doTrap() {
+	inventory.addTrapExp(hud);
+	if (target == 1 && cogOne.currentHealth > 0 && cogOne.trapped == 0) {
+		if (inventory.trapExp >= 3) {
+			cogOne.trapped = 40;
+		}
+		else {
+			cogOne.trapped = 20;
+		}
+		textBoxString = textBoxString + cogOne.name + " has been trapped! \n";
+	}
+	else if (target == 2 && cogTwo.currentHealth > 0 && cogTwo.trapped == 0) {
+		if (inventory.trapExp >= 3) {
+			cogTwo.trapped = 40;
+		}
+		else {
+			cogTwo.trapped = 20;
+		}
+		textBoxString = textBoxString + cogTwo.name + " has been trapped! \n";
+	}
+}
+/*
+===============
+idPlayer::doLure
+===============
+*/
+void idPlayer::doLure() {
+	inventory.addLureExp(hud);
+
+	if (accRoll <= 25) {
+		textBoxString = textBoxString + "Your lure missed! \n";
+	}
+	else if (target == 1 && cogOne.currentHealth > 0 && cogOne.trapped > 0) {
+		cogOne.takeDamage(cogOne.trapped, hud);
+		idStr damageString = "";
+		sprintf(damageString, "%d", cogOne.trapped);
+		textBoxString = textBoxString + cogOne.name + " has taken " + damageString + " points of trap damage! \n";
+		cogOne.trapped = 0;
+	}
+	else if (target == 1 && cogOne.currentHealth > 0) {
+		textBoxString = textBoxString + cogOne.name + " has been lured! \n";
+		if (inventory.lureExp >= 3) {
+			cogOne.lured = 16;
+		}
+		else {
+			cogOne.lured = 8;
+		}
+	}
+	else if (target == 2 && cogTwo.currentHealth > 0 && cogTwo.trapped > 0) {
+		cogTwo.takeDamage(cogTwo.trapped, hud);
+		idStr damageString = "";
+		sprintf(damageString, "%d", cogTwo.trapped);
+		textBoxString = textBoxString + cogTwo.name + " has taken " + damageString + " points of trap damage! \n";
+		cogTwo.trapped = 0;
+	}
+	else if (target == 2 && cogTwo.currentHealth > 0) {
+		textBoxString = textBoxString + cogTwo.name + " has been lured! \n";
+		if (inventory.lureExp >= 3) {
+			cogTwo.lured = 14;
+		}
+		else {
+			cogTwo.lured = 7;
+		}
+	}
+}
+/*
+===============
+idPlayer::doThrow
+===============
+*/
+void idPlayer::doThrow() {
+	inventory.addThrowExp(hud);
+	if (accRoll <= 20) {
+		textBoxString = textBoxString + "Your throw missed! \n";
+	}
+	else if (target == 1 && cogOne.currentHealth > 0) {
+		idStr damageString = "";
+		int damage = 0;
+		if (inventory.throwExp >= 3) {
+			damage = 28;
+		}
+		else {
+			damage = 14;
+		}
+		sprintf(damageString, "%d", damage);
+		textBoxString = textBoxString + cogOne.name + " has taken " + damageString + " points of throw damage! \n";
+		if (inventory.lureExp >= 3 && cogOne.lured > 0) {
+			damage = damage + 14;
+			textBoxString = textBoxString + cogOne.name + " also takes 14 points of knockback! \n";
+		}
+		else if (inventory.lureExp < 3 && cogOne.lured > 0) {
+			damage = damage + 7;
+			textBoxString = textBoxString + cogOne.name + " also takes 7 points of knockback! \n";
+		}
+		cogOne.lured = 0;
+		cogOne.takeDamage(damage, hud);
+	}
+	else if (target == 2 && cogTwo.currentHealth > 0) {
+		idStr damageString = "";
+		int damage = 0;
+		if (inventory.throwExp >= 3) {
+			damage = 28;
+		}
+		else {
+			damage = 14;
+		}
+		sprintf(damageString, "%d", damage);
+		textBoxString = textBoxString + cogTwo.name + " has taken " + damageString + " points of throw damage! \n";
+		if (inventory.lureExp >= 3 && cogTwo.lured > 0) {
+			damage = damage + 14;
+			textBoxString = textBoxString + cogTwo.name + " also takes 14 points of knockback! \n";
+		}
+		else if (inventory.lureExp < 3 && cogTwo.lured > 0) {
+			damage = damage + 7;
+			textBoxString = textBoxString + cogTwo.name + " also takes 7 points of knockback! \n";
+		}
+		cogTwo.lured = 0;
+		cogTwo.takeDamage(damage, hud);
+	}
+}
+/*
+===============
+idPlayer::doSquirt
+===============
+*/
+void idPlayer::doSquirt() {
+	inventory.addSquirtExp(hud);
+	if (accRoll <= 5) {
+		textBoxString = textBoxString + "Your squirt missed! \n";
+	}
+	else if (target == 1 && cogOne.currentHealth > 0) {
+		idStr damageString = "";
+		int damage = 0;
+		if (inventory.squirtExp >= 3) {
+			damage = 15;
+		}
+		else {
+			damage = 7;
+		}
+		sprintf(damageString, "%d", damage);
+		textBoxString = textBoxString + cogOne.name + " has taken " + damageString + " points of squirt damage! \n";
+		if (inventory.lureExp >= 3 && cogOne.lured > 0) {
+			damage = damage + 14;
+			textBoxString = textBoxString + cogOne.name + " also takes 14 points of knockback! \n";
+		}
+		else if (inventory.lureExp < 3 && cogOne.lured > 0) {
+			damage = damage + 7;
+			textBoxString = textBoxString + cogOne.name + " also takes 7 points of knockback! \n";
+		}
+		cogOne.lured = 0;
+		cogOne.soaked = 1;
+		cogTwo.soaked = 1;
+		textBoxString = textBoxString + "All cogs on the field have been soaked! \n";
+		cogOne.takeDamage(damage, hud);
+	}
+	else if (target == 2 && cogTwo.currentHealth > 0) {
+		idStr damageString = "";
+		int damage = 0;
+		if (inventory.squirtExp >= 3) {
+			damage = 15;
+		}
+		else {
+			damage = 7;
+		}
+		sprintf(damageString, "%d", damage);
+		textBoxString = textBoxString + cogTwo.name + " has taken " + damageString + " points of squirt damage! \n";
+		if (inventory.lureExp >= 3 && cogTwo.lured > 0) {
+			damage = damage + 14;
+			textBoxString = textBoxString + cogTwo.name + " also takes 14 points of knockback! \n";
+		}
+		else if (inventory.lureExp < 3 && cogTwo.lured > 0) {
+			damage = damage + 7;
+			textBoxString = textBoxString + cogTwo.name + " also takes 7 points of knockback! \n";
+		}
+		cogTwo.lured = 0;
+		cogOne.soaked = 1;
+		cogTwo.soaked = 1;
+		textBoxString = textBoxString + "All cogs on the field have been soaked! \n";
+		cogOne.takeDamage(damage, hud);
+	}
+}
+/*
+===============
+idPlayer::doZap
+===============
+*/
+void idPlayer::doZap() {
+	if (target == 1 && cogOne.currentHealth > 0) {
+		if (cogOne.soaked == 0) {
+			textBoxString = textBoxString + cogOne.name + " is not soaked! \n";
+		}
+		else {
+			inventory.addZapExp(hud);
+			idStr damageString = "";
+			int damage = 0;
+			if (inventory.zapExp >= 3) {
+				cogOne.takeDamage(30, hud);
+				textBoxString = textBoxString + cogOne.name + " has taken 30 points of zap damage! \n";
+				if (cogTwo.currentHealth > 0) {
+					cogTwo.takeDamage(15, hud);
+					textBoxString = textBoxString + cogTwo.name + " has taken 15 points of zap bounce damage! \n";
+				}
+			}
+			else {
+				cogOne.takeDamage(20, hud);
+				textBoxString = textBoxString + cogOne.name + " has taken 20 points of zap damage! \n";
+				if (cogTwo.currentHealth > 0) {
+					cogTwo.takeDamage(10, hud);
+					textBoxString = textBoxString + cogTwo.name + " has taken 10 points of zap bounce damage! \n";
+				}
+			}
+			textBoxString = textBoxString + "All cogs are no longer soaked and/or lured! \n";
+			cogOne.lured = 0;
+			cogTwo.lured = 0;
+			cogOne.soaked = 0;
+			cogTwo.soaked = 0;
+		}
+	}
+	else if (target == 2 && cogTwo.currentHealth > 0) {
+		if (cogTwo.soaked == 0) {
+			textBoxString = textBoxString + cogTwo.name + " is not soaked! \n";
+		}
+		else {
+			inventory.addZapExp(hud);
+			idStr damageString = "";
+			int damage = 0;
+			if (inventory.zapExp >= 3) {
+				cogTwo.takeDamage(30, hud);
+				textBoxString = textBoxString + cogTwo.name + " has taken 30 points of zap damage! \n";
+				if (cogOne.currentHealth > 0) {
+					cogOne.takeDamage(15, hud);
+					textBoxString = textBoxString + cogOne.name + " has taken 15 points of zap bounce damage! \n";
+				}
+			}
+			else {
+				cogTwo.takeDamage(20, hud);
+				textBoxString = textBoxString + cogTwo.name + " has taken 20 points of zap damage! \n";
+				if (cogOne.currentHealth > 0) {
+					cogOne.takeDamage(10, hud);
+					textBoxString = textBoxString + cogOne.name + " has taken 10 points of zap bounce damage! \n";
+				}
+			}
+			textBoxString = textBoxString + "All cogs are no longer soaked and/or lured! \n";
+			cogOne.lured = 0;
+			cogTwo.lured = 0;
+			cogOne.soaked = 0;
+			cogTwo.soaked = 0;
+		}
+	}
+}
+/*
+===============
+idPlayer::doSound
+===============
+*/
+void idPlayer::doSound() {
+	inventory.addSoundExp(hud);
+	idStr damageString = "";
+	int damage = 0;
+	if (inventory.soundExp >= 3) {
+		if (cogOne.currentHealth > 0) {
+			textBoxString = textBoxString + cogOne.name + " has taken 15 points of sound damage! \n";
+		}
+		if (cogTwo.currentHealth > 0) {
+			textBoxString = textBoxString + cogTwo.name + " has taken 15 points of sound damage! \n";
+		}
+		if (target == 1) {
+			cogOne.takeDamage(15, hud);
+			target = 2;
+			cogTwo.takeDamage(15, hud);
+			target = 1;
+		}
+		else if (target == 2) {
+			cogTwo.takeDamage(15, hud);
+			target = 1;
+			cogOne.takeDamage(15, hud);
+			target = 2;
+		}
+		
+	}
+	else {
+		if (cogOne.currentHealth > 0) {
+			textBoxString = textBoxString + cogOne.name + " has taken 10 points of sound damage! \n";
+		}
+		if (cogTwo.currentHealth > 0) {
+			textBoxString = textBoxString + cogTwo.name + " has taken 10 points of sound damage! \n";
+		}
+		if (target == 1) {
+			cogOne.takeDamage(10, hud);
+			target = 2;
+			cogTwo.takeDamage(10, hud);
+			target = 1;
+		}
+		else if (target == 2) {
+			cogTwo.takeDamage(10, hud);
+			target = 1;
+			cogOne.takeDamage(10, hud);
+			target = 2;
+		}
+	}
+	textBoxString = textBoxString + "All cogs are no longer lured! \n";
+	cogOne.lured = 0;
+	cogTwo.lured = 0;
+}
+/*
+===============
+idPlayer::doDrop
+===============
+*/
+void idPlayer::doDrop() {
+	inventory.addDropExp(hud);
+	if (accRoll <= 35) {
+		textBoxString = textBoxString + "Your drop missed! \n";
+	}
+	else if (target == 1 && cogOne.currentHealth > 0) {
+		idStr damageString = "";
+		int damage = 0;
+		if (inventory.dropExp >= 3) {
+			damage = 40;
+		}
+		else {
+			damage = 20;
+		}
+		sprintf(damageString, "%d", damage);
+		textBoxString = textBoxString + cogOne.name + " has taken " + damageString + " points of drop damage! \n";
+		textBoxString = textBoxString + cogOne.name + " is unlured if it was lured! \n";
+		cogOne.lured = 0;
+		cogOne.takeDamage(damage, hud);
+	}
+	else if (target == 2 && cogTwo.currentHealth > 0) {
+		idStr damageString = "";
+		int damage = 0;
+		if (inventory.dropExp >= 3) {
+			damage = 40;
+		}
+		else {
+			damage = 20;
+		}
+		sprintf(damageString, "%d", damage);
+		textBoxString = textBoxString + cogTwo.name + " has taken " + damageString + " points of drop damage! \n";
+		textBoxString = textBoxString + cogTwo.name + " is unlured if it was lured! \n";
+		cogTwo.lured = 0;
+		cogTwo.takeDamage(damage, hud);
+	}
+}
+/*
+===============
+idPlayer::doDoodle
+===============
+*/
+void idPlayer::doDoodle() {
+	if (inventory.doodleExp == 0) {
+		textBoxString = textBoxString + "You don't have a doodle! \n";
+		//idPlayer* player = gameLocal.GetLocalPlayer();
+		//player->Event_SetHealth(player->health + 40);
+	}
+	else if (inventory.doodleExp == 1) {
+
+	}
+}
+/*
+===============
+idPlayer::doDice
+===============
+*/
+void idPlayer::doDice() {
+	inventory.addDiceExp(hud);
+}
 /*
 ===============
 idInventory::addToonUpExp
@@ -8833,19 +9305,29 @@ void idPlayer::PerformImpulse( int impulse ) {
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_railgun", "");
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_rocketlauncher", "");
 			GiveStuffToPlayer(gameLocal.GetLocalPlayer(), "weapon_shotgun", "");
+			srand(time(NULL));
 			target = 1;
+			waves = 1;
+			hud->SetStateString("waves", "1");
 			hud->SetStateString("target", "1");
 			jellybeans = 0;
 			hud->SetStateString("playerJBs", "0");
-			idCog cogOne = idCog();
+			textBoxString = "";
 			cogOne.spawn(20, "Flunky", "Watercooler", "Clip-on Tie", "Shredder", hud, 1);
-			idCog cogTwo = idCog();
 			cogTwo.spawn(20, "Tightwad", "Bounce Check", "Watercooler", "Freeze Assets", hud, 2);
+			hud->SetStateString("textBoxText", textBoxString);
 			break;
 		}
 		case IMPULSE_42: {
-			gameLocal.Printf(gameLocal.GetLocalPlayer()->GetEyePosition().ToString());
-			gameLocal.Printf("\n");
+			//gameLocal.Printf(gameLocal.GetLocalPlayer()->GetEyePosition().ToString());
+			//gameLocal.Printf("\n");
+			textBoxString = "";
+			textBoxString = textBoxString + "Pet 1: Walter - 70% accuracy, 10 damage, 5 lifesteal, 10 JBs - c \n";
+			textBoxString = textBoxString + "Pet 2: Pet McPetFace - 80% accuracy, 10 damage, 5 lifesteal, 20 JBs - v \n";
+			textBoxString = textBoxString + "Pet 3: Ploob - 60% accuracy, 20 damage, 10 lifesteal, 20 JBs - b \n";
+			textBoxString = textBoxString + "Pet 4: Mr. 4 - 70% accuracy, 20 damage, 10 lifesteal, 30 JBs - n \n";
+			textBoxString = textBoxString + "Pet 5: Doogis - 80% accuracy, 20 damage, 10 lifesteal, 40 JBs - m \n";
+			hud->SetStateString("textBoxText", textBoxString);
 			break;
 		}
 		case IMPULSE_43: {
@@ -8853,10 +9335,93 @@ void idPlayer::PerformImpulse( int impulse ) {
 				target = 2;
 				hud->SetStateString("target", "2");
 			}
-			else {
+			else if (target == 2) {
 				target = 1;
 				hud->SetStateString("target", "1");
 			}
+			break;
+		}
+		case IMPULSE_44: {
+			if (jellybeans >= 10) {
+				inventory.doodleExp = 1;
+				textBoxString = "You have purchased Walter!";
+				jellybeans = jellybeans - 10;
+				
+			}
+			else {
+				textBoxString = "You do not have enough jellybeans to buy Walter";
+			}
+			hud->SetStateInt("playerJBs", jellybeans);
+			hud->SetStateString("textBoxText", textBoxString);
+			hud->SetStateInt("doodlePoints", 1);
+			break;
+		}
+		case IMPULSE_45: {
+			if (jellybeans >= 20) {
+				inventory.doodleExp = 2;
+				textBoxString = "You have purchased Pet McPetFace!";
+				jellybeans = jellybeans - 20;
+
+			}
+			else {
+				textBoxString = "You do not have enough jellybeans to buy Pet McPetFace";
+			}
+			hud->SetStateInt("playerJBs", jellybeans);
+			hud->SetStateString("textBoxText", textBoxString);
+			hud->SetStateInt("doodlePoints", 2);
+			break;
+		}
+		case IMPULSE_46: {
+			if (jellybeans >= 20) {
+				inventory.doodleExp = 3;
+				textBoxString = "You have purchased Ploob!";
+				jellybeans = jellybeans - 20;
+
+			}
+			else {
+				textBoxString = "You do not have enough jellybeans to buy Ploob";
+			}
+			hud->SetStateInt("playerJBs", jellybeans);
+			hud->SetStateString("textBoxText", textBoxString);
+			hud->SetStateInt("doodlePoints", 3);
+			break;
+		}
+		case IMPULSE_47: {
+			if (jellybeans >= 30) {
+				inventory.doodleExp = 4;
+				textBoxString = "You have purchased Mr. 4!";
+				jellybeans = jellybeans - 30;
+
+			}
+			else {
+				textBoxString = "You do not have enough jellybeans to buy Mr. 4";
+			}
+			hud->SetStateInt("playerJBs", jellybeans);
+			hud->SetStateString("textBoxText", textBoxString);
+			hud->SetStateInt("doodlePoints", 4);
+			break;
+		}
+		case IMPULSE_48: {
+			if (jellybeans >= 20) {
+				inventory.doodleExp = 5;
+				textBoxString = "You have purchased Doogis!";
+				jellybeans = jellybeans - 20;
+
+			}
+			else {
+				textBoxString = "You do not have enough jellybeans to buy Doogis";
+			}
+			hud->SetStateInt("playerJBs", jellybeans);
+			hud->SetStateString("textBoxText", textBoxString);
+			hud->SetStateInt("doodlePoints", 5);
+			break;
+		}
+		case IMPULSE_49: {
+			textBoxString = "Press P to start! Ignore the lightning gun btw, it does not do anything. \n";
+			textBoxString = textBoxString + "Starting with the blaster (and ignoring the lightning gun \n";
+			textBoxString = textBoxString + "The blaster represents toonup, then the smg trap, etc, and shooting it uses it \n";
+			textBoxString = textBoxString + "To bring up the pet shop, press l";
+			hud->SetStateString("textBoxText", textBoxString);
 			break;
 		}
 
@@ -11505,7 +12070,7 @@ idPlayer::Event_SetHealth
 =============
 */
 void idPlayer::Event_SetHealth( float newHealth ) {
-	health = idMath::ClampInt( 1 , inventory.maxHealth, newHealth );
+	health = idMath::ClampInt( 0 , inventory.maxHealth, newHealth );
 }
 /*
 =============

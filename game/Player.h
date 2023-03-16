@@ -196,6 +196,9 @@ class idCog {
 public:
 	int						maxHealth;
 	int						currentHealth;
+	int						trapped;
+	int						lured;
+	int						soaked;
 	idStr					name;
 	idStr					attackOne;
 	idStr					attackTwo;
@@ -211,6 +214,7 @@ class idInventory {
 public:
 	int						maxHealth;
 	int						weapons;
+	
 // RITUAL BEGIN
 // squirrel: Mode-agnostic buymenus
 	int						carryOverWeapons;
@@ -279,6 +283,7 @@ public:
 	void					addDoodleExp(idUserInterface* _hud);
 	void					addDiceExp(idUserInterface* _hud);
 
+
 // RAVEN BEGIN
 // mekberg: if the player can pick up the ammo at this time
 	bool					DetermineAmmoAvailability( idPlayer* owner, const char *ammoName, int ammoIndex, int ammoAmount, int ammoMax );
@@ -323,8 +328,24 @@ public:
 	class idPlayerView		playerView;			// handles damage kicks and effects
 
 	int						target;
-	int						wavesCompleted;
+	int						waves;
 	int						jellybeans;
+	idCog					cogOne;
+	idCog					cogTwo;
+	idStr					textBoxString;
+	int						accRoll;
+	void					doToonUp();
+	void					doTrap();
+	void					doLure();
+	void					doThrow();
+	void					doSquirt();
+	void					doZap();
+	void					doSound();
+	void					doDrop();
+	void					doDoodle();
+	void					doDice();
+
+
 	bool					alreadyDidTeamAnnouncerSound;
 	bool					noclip;
 	bool					godmode;
