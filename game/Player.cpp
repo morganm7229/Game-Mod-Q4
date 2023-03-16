@@ -1545,13 +1545,13 @@ void idPlayer::doDoodle() {
 			textBoxString = textBoxString + "Your doodle failed to show up! \n";
 		}
 		else {
-			if (target == 1) {
+			if (target == 1 && cogOne.currentHealth > 0) {
 				textBoxString = textBoxString + cogOne.name + " has taken 10 points of damage from Walter! \n";
 				textBoxString = textBoxString + "You have been healed for 5hp by your Doodle \n";
 				Event_SetHealth(health + 5);
 				cogOne.takeDamage(10, hud);
 			}
-			else {
+			else if (target == 2 && cogTwo.currentHealth > 0) {
 				textBoxString = textBoxString + cogTwo.name + " has taken 10 points of damage from Walter! \n";
 				textBoxString = textBoxString + "You have been healed for 5hp by your Doodle \n";
 				Event_SetHealth(health + 5);
@@ -1564,13 +1564,13 @@ void idPlayer::doDoodle() {
 			textBoxString = textBoxString + "Your doodle failed to show up! \n";
 		}
 		else {
-			if (target == 1) {
+			if (target == 1 && cogOne.currentHealth > 0) {
 				textBoxString = textBoxString + cogOne.name + " has taken 10 points of damage from Pet McPetFace! \n";
 				textBoxString = textBoxString + "You have been healed for 5hp by your Doodle \n";
 				Event_SetHealth(health + 5);
 				cogOne.takeDamage(10, hud);
 			}
-			else {
+			else if (target == 2 && cogTwo.currentHealth > 0) {
 				textBoxString = textBoxString + cogTwo.name + " has taken 10 points of damage from Pet McPetFace! \n";
 				textBoxString = textBoxString + "You have been healed for 5hp by your Doodle \n";
 				Event_SetHealth(health + 5);
@@ -1583,13 +1583,13 @@ void idPlayer::doDoodle() {
 			textBoxString = textBoxString + "Your doodle failed to show up! \n";
 		}
 		else {
-			if (target == 1) {
+			if (target == 1 && cogOne.currentHealth > 0) {
 				textBoxString = textBoxString + cogOne.name + " has taken 20 points of damage from Ploob! \n";
 				textBoxString = textBoxString + "You have been healed for 10hp by your Doodle \n";
 				Event_SetHealth(health + 10);
 				cogOne.takeDamage(20, hud);
 			}
-			else {
+			else if (target == 2 && cogTwo.currentHealth > 0) {
 				textBoxString = textBoxString + cogTwo.name + " has taken 20 points of damage from Ploob! \n";
 				textBoxString = textBoxString + "You have been healed for 10hp by your Doodle \n";
 				Event_SetHealth(health + 10);
@@ -1602,13 +1602,13 @@ void idPlayer::doDoodle() {
 			textBoxString = textBoxString + "Your doodle failed to show up! \n";
 		}
 		else {
-			if (target == 1) {
+			if (target == 1 && cogOne.currentHealth > 0) {
 				textBoxString = textBoxString + cogOne.name + " has taken 20 points of damage from Mr. 4! \n";
 				textBoxString = textBoxString + "You have been healed for 10hp by your Doodle \n";
 				Event_SetHealth(health + 10);
 				cogOne.takeDamage(20, hud);
 			}
-			else {
+			else if (target == 2 && cogTwo.currentHealth > 0) {
 				textBoxString = textBoxString + cogTwo.name + " has taken 20 points of damage from Mr. 4! \n";
 				textBoxString = textBoxString + "You have been healed for 10hp by your Doodle \n";
 				Event_SetHealth(health + 10);
@@ -1621,13 +1621,13 @@ void idPlayer::doDoodle() {
 			textBoxString = textBoxString + "Your doodle failed to show up! \n";
 		}
 		else {
-			if (target == 1) {
+			if (target == 1 && cogOne.currentHealth > 0) {
 				textBoxString = textBoxString + cogOne.name + " has taken 20 points of damage from Doogis! \n";
 				textBoxString = textBoxString + "You have been healed for 10hp by your Doodle \n";
 				Event_SetHealth(health + 10);
 				cogOne.takeDamage(20, hud);
 			}
-			else {
+			else if (target == 2 && cogTwo.currentHealth > 0) {
 				textBoxString = textBoxString + cogTwo.name + " has taken 20 points of damage from Doogis! \n";
 				textBoxString = textBoxString + "You have been healed for 10hp by your Doodle \n";
 				Event_SetHealth(health + 10);
@@ -1643,6 +1643,7 @@ idPlayer::doDice
 */
 void idPlayer::doDice() {
 	inventory.addDiceExp(hud);
+	if
 }
 /*
 ===============
