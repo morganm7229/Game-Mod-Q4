@@ -1643,7 +1643,32 @@ idPlayer::doDice
 */
 void idPlayer::doDice() {
 	inventory.addDiceExp(hud);
-	if
+	int diceDamage = 0;
+	idStr diceString = "";
+	if (inventory.diceExp >= 3) {
+		diceDamage = rand() % 40 + 1;
+		sprintf(diceString, "%d", diceDamage);
+		if (target == 1 && cogOne.currentHealth > 0) {
+			textBoxString = textBoxString + cogOne.name + " has taken " + diceString + " points of dice damage!";
+			cogOne.takeDamage(diceDamage, hud);
+		}
+		else if (target == 2 && cogTwo.currentHealth > 0) {
+			textBoxString = textBoxString + cogTwo.name + " has taken " + diceString + " points of dice damage!";
+			cogTwo.takeDamage(diceDamage, hud);
+		}
+	}
+	else {
+		diceDamage = rand() % 20 + 1;
+		sprintf(diceString, "%d", diceDamage);
+		if (target == 1 && cogOne.currentHealth > 0) {
+			textBoxString = textBoxString + cogOne.name + " has taken " + diceString + " points of dice damage!";
+			cogOne.takeDamage(diceDamage, hud);
+		}
+		else if (target == 2 && cogTwo.currentHealth > 0) {
+			textBoxString = textBoxString + cogTwo.name + " has taken " + diceString + " points of dice damage!";
+			cogTwo.takeDamage(diceDamage, hud);
+		}
+	}
 }
 /*
 ===============

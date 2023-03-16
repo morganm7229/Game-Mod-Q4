@@ -199,6 +199,7 @@ public:
 	int						trapped;
 	int						lured;
 	int						soaked;
+	int						cheats;
 	idStr					name;
 	idStr					attackOne;
 	idStr					attackTwo;
@@ -207,7 +208,6 @@ public:
 	void					takeDamage(int damage, idUserInterface* _hud);
 	void					attack(idUserInterface* _hud);
 	void					die();
-
 };
 
 class idInventory {
