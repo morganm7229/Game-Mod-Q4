@@ -237,7 +237,7 @@ idCog::Attack
 void idCog::attack(idUserInterface* _hud) {
 	if (currentHealth > 0) {
 		int attackChoice = rand() % 3 + 1;
-		int damage = rand() % 5 + 1;
+		int damage = rand() % 15 + 1;
 		idStr dmgStr = "";
 		idStr toTextBox = "";
 		sprintf(dmgStr, "%d", damage);
@@ -1375,7 +1375,9 @@ void idPlayer::doZap() {
 				cogOne.takeDamage(30, hud);
 				textBoxString = textBoxString + cogOne.name + " has taken 30 points of zap damage! \n";
 				if (cogTwo.currentHealth > 0) {
+					target = 2;
 					cogTwo.takeDamage(15, hud);
+					target = 1;
 					textBoxString = textBoxString + cogTwo.name + " has taken 15 points of zap bounce damage! \n";
 				}
 			}
@@ -1383,7 +1385,9 @@ void idPlayer::doZap() {
 				cogOne.takeDamage(20, hud);
 				textBoxString = textBoxString + cogOne.name + " has taken 20 points of zap damage! \n";
 				if (cogTwo.currentHealth > 0) {
+					target = 2;
 					cogTwo.takeDamage(10, hud);
+					target = 1;
 					textBoxString = textBoxString + cogTwo.name + " has taken 10 points of zap bounce damage! \n";
 				}
 			}
@@ -1406,7 +1410,9 @@ void idPlayer::doZap() {
 				cogTwo.takeDamage(30, hud);
 				textBoxString = textBoxString + cogTwo.name + " has taken 30 points of zap damage! \n";
 				if (cogOne.currentHealth > 0) {
+					target = 1;
 					cogOne.takeDamage(15, hud);
+					target = 2;
 					textBoxString = textBoxString + cogOne.name + " has taken 15 points of zap bounce damage! \n";
 				}
 			}
@@ -1414,7 +1420,9 @@ void idPlayer::doZap() {
 				cogTwo.takeDamage(20, hud);
 				textBoxString = textBoxString + cogTwo.name + " has taken 20 points of zap damage! \n";
 				if (cogOne.currentHealth > 0) {
+					target = 1;
 					cogOne.takeDamage(10, hud);
+					target = 2;
 					textBoxString = textBoxString + cogOne.name + " has taken 10 points of zap bounce damage! \n";
 				}
 			}
@@ -1533,7 +1541,99 @@ void idPlayer::doDoodle() {
 		//player->Event_SetHealth(player->health + 40);
 	}
 	else if (inventory.doodleExp == 1) {
-
+		if (accRoll <= 40) {
+			textBoxString = textBoxString + "Your doodle failed to show up! \n";
+		}
+		else {
+			if (target == 1) {
+				textBoxString = textBoxString + cogOne.name + " has taken 10 points of damage from Walter! \n";
+				textBoxString = textBoxString + "You have been healed for 5hp by your Doodle \n";
+				Event_SetHealth(health + 5);
+				cogOne.takeDamage(10, hud);
+			}
+			else {
+				textBoxString = textBoxString + cogTwo.name + " has taken 10 points of damage from Walter! \n";
+				textBoxString = textBoxString + "You have been healed for 5hp by your Doodle \n";
+				Event_SetHealth(health + 5);
+				cogTwo.takeDamage(10, hud);
+			}
+		}
+	}
+	else if (inventory.doodleExp == 2) {
+		if (accRoll <= 30) {
+			textBoxString = textBoxString + "Your doodle failed to show up! \n";
+		}
+		else {
+			if (target == 1) {
+				textBoxString = textBoxString + cogOne.name + " has taken 10 points of damage from Pet McPetFace! \n";
+				textBoxString = textBoxString + "You have been healed for 5hp by your Doodle \n";
+				Event_SetHealth(health + 5);
+				cogOne.takeDamage(10, hud);
+			}
+			else {
+				textBoxString = textBoxString + cogTwo.name + " has taken 10 points of damage from Pet McPetFace! \n";
+				textBoxString = textBoxString + "You have been healed for 5hp by your Doodle \n";
+				Event_SetHealth(health + 5);
+				cogTwo.takeDamage(10, hud);
+			}
+		}
+	}
+	else if (inventory.doodleExp == 3) {
+		if (accRoll <= 40) {
+			textBoxString = textBoxString + "Your doodle failed to show up! \n";
+		}
+		else {
+			if (target == 1) {
+				textBoxString = textBoxString + cogOne.name + " has taken 20 points of damage from Ploob! \n";
+				textBoxString = textBoxString + "You have been healed for 10hp by your Doodle \n";
+				Event_SetHealth(health + 10);
+				cogOne.takeDamage(20, hud);
+			}
+			else {
+				textBoxString = textBoxString + cogTwo.name + " has taken 20 points of damage from Ploob! \n";
+				textBoxString = textBoxString + "You have been healed for 10hp by your Doodle \n";
+				Event_SetHealth(health + 10);
+				cogTwo.takeDamage(20, hud);
+			}
+		}
+	}
+	else if (inventory.doodleExp == 4) {
+		if (accRoll <= 30) {
+			textBoxString = textBoxString + "Your doodle failed to show up! \n";
+		}
+		else {
+			if (target == 1) {
+				textBoxString = textBoxString + cogOne.name + " has taken 20 points of damage from Mr. 4! \n";
+				textBoxString = textBoxString + "You have been healed for 10hp by your Doodle \n";
+				Event_SetHealth(health + 10);
+				cogOne.takeDamage(20, hud);
+			}
+			else {
+				textBoxString = textBoxString + cogTwo.name + " has taken 20 points of damage from Mr. 4! \n";
+				textBoxString = textBoxString + "You have been healed for 10hp by your Doodle \n";
+				Event_SetHealth(health + 10);
+				cogTwo.takeDamage(20, hud);
+			}
+		}
+	}
+	else if (inventory.doodleExp == 5) {
+		if (accRoll <= 20) {
+			textBoxString = textBoxString + "Your doodle failed to show up! \n";
+		}
+		else {
+			if (target == 1) {
+				textBoxString = textBoxString + cogOne.name + " has taken 20 points of damage from Doogis! \n";
+				textBoxString = textBoxString + "You have been healed for 10hp by your Doodle \n";
+				Event_SetHealth(health + 10);
+				cogOne.takeDamage(20, hud);
+			}
+			else {
+				textBoxString = textBoxString + cogTwo.name + " has taken 20 points of damage from Doogis! \n";
+				textBoxString = textBoxString + "You have been healed for 10hp by your Doodle \n";
+				Event_SetHealth(health + 10);
+				cogTwo.takeDamage(20, hud);
+			}
+		}
 	}
 }
 /*
@@ -9346,6 +9446,7 @@ void idPlayer::PerformImpulse( int impulse ) {
 				inventory.doodleExp = 1;
 				textBoxString = "You have purchased Walter!";
 				jellybeans = jellybeans - 10;
+				hud->SetStateInt("doodlePoints", 1);
 				
 			}
 			else {
@@ -9353,7 +9454,6 @@ void idPlayer::PerformImpulse( int impulse ) {
 			}
 			hud->SetStateInt("playerJBs", jellybeans);
 			hud->SetStateString("textBoxText", textBoxString);
-			hud->SetStateInt("doodlePoints", 1);
 			break;
 		}
 		case IMPULSE_45: {
@@ -9361,14 +9461,13 @@ void idPlayer::PerformImpulse( int impulse ) {
 				inventory.doodleExp = 2;
 				textBoxString = "You have purchased Pet McPetFace!";
 				jellybeans = jellybeans - 20;
-
+				hud->SetStateInt("doodlePoints", 2);
 			}
 			else {
 				textBoxString = "You do not have enough jellybeans to buy Pet McPetFace";
 			}
 			hud->SetStateInt("playerJBs", jellybeans);
 			hud->SetStateString("textBoxText", textBoxString);
-			hud->SetStateInt("doodlePoints", 2);
 			break;
 		}
 		case IMPULSE_46: {
@@ -9376,14 +9475,13 @@ void idPlayer::PerformImpulse( int impulse ) {
 				inventory.doodleExp = 3;
 				textBoxString = "You have purchased Ploob!";
 				jellybeans = jellybeans - 20;
-
+				hud->SetStateInt("doodlePoints", 3);
 			}
 			else {
 				textBoxString = "You do not have enough jellybeans to buy Ploob";
 			}
 			hud->SetStateInt("playerJBs", jellybeans);
 			hud->SetStateString("textBoxText", textBoxString);
-			hud->SetStateInt("doodlePoints", 3);
 			break;
 		}
 		case IMPULSE_47: {
@@ -9391,33 +9489,31 @@ void idPlayer::PerformImpulse( int impulse ) {
 				inventory.doodleExp = 4;
 				textBoxString = "You have purchased Mr. 4!";
 				jellybeans = jellybeans - 30;
-
+				hud->SetStateInt("doodlePoints", 4);
 			}
 			else {
 				textBoxString = "You do not have enough jellybeans to buy Mr. 4";
 			}
 			hud->SetStateInt("playerJBs", jellybeans);
 			hud->SetStateString("textBoxText", textBoxString);
-			hud->SetStateInt("doodlePoints", 4);
 			break;
 		}
 		case IMPULSE_48: {
-			if (jellybeans >= 20) {
+			if (jellybeans >= 40) {
 				inventory.doodleExp = 5;
 				textBoxString = "You have purchased Doogis!";
 				jellybeans = jellybeans - 20;
-
+				hud->SetStateInt("doodlePoints", 5);
 			}
 			else {
 				textBoxString = "You do not have enough jellybeans to buy Doogis";
 			}
 			hud->SetStateInt("playerJBs", jellybeans);
 			hud->SetStateString("textBoxText", textBoxString);
-			hud->SetStateInt("doodlePoints", 5);
 			break;
 		}
 		case IMPULSE_49: {
-			textBoxString = "Press P to start! Ignore the lightning gun btw, it does not do anything. \n";
+			textBoxString = "Press P to start! Ignore the lightning gun, it does not do anything. \n";
 			textBoxString = textBoxString + "Starting with the blaster (and ignoring the lightning gun \n";
 			textBoxString = textBoxString + "The blaster represents toonup, then the smg trap, etc, and shooting it uses it \n";
 			textBoxString = textBoxString + "To bring up the pet shop, press l";
