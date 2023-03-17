@@ -204,7 +204,7 @@ public:
 	idStr					attackOne;
 	idStr					attackTwo;
 	idStr					attackThree;
-	void					spawn(int maxHealth, idStr name, idStr attackOne, idStr attackTwo, idStr attackThree, idUserInterface* _hud, int cogNum);
+	void					spawn(int maxHealth, idStr name, idStr attackOne, idStr attackTwo, idStr attackThree, idUserInterface* _hud, int cogNum, int cheats);
 	void					takeDamage(int damage, idUserInterface* _hud);
 	void					attack(idUserInterface* _hud);
 	void					die();

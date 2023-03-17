@@ -198,7 +198,7 @@ const idVec4 defaultHitscanTint( 0.4f, 1.0f, 0.4f, 1.0f );
 idCog::Spawn
 ==============
 */
-void idCog::spawn(int newMaxHealth, idStr newName, idStr newAttackOne, idStr newAttackTwo, idStr newAttackThree, idUserInterface* _hud, int cogNum) {
+void idCog::spawn(int newMaxHealth, idStr newName, idStr newAttackOne, idStr newAttackTwo, idStr newAttackThree, idUserInterface* _hud, int cogNum, int newCheats) {
 	maxHealth = newMaxHealth;
 	currentHealth = maxHealth;
 	name = newName;
@@ -207,26 +207,33 @@ void idCog::spawn(int newMaxHealth, idStr newName, idStr newAttackOne, idStr new
 	attackThree = newAttackThree;
 	trapped = 0;
 	lured = 0;
+	cheats = newCheats;
+	idPlayer* player = gameLocal.GetLocalPlayer();
 	if (cogNum == 1) {
 		idStr maxHealthString = "";
 		sprintf(maxHealthString, "%d", maxHealth);
 		_hud->SetStateString("enemyOneName", name);
 		_hud->SetStateString("enemyOneHealth", maxHealthString);
-		idPlayer* player = gameLocal.GetLocalPlayer();
 		player->cogOneExists = 1;
 		player->textBoxString = player->textBoxString + "A " + name + " has spawned! \n";
-
 	}
 	else {
 		idStr maxHealthString = "";
 		sprintf(maxHealthString, "%d", maxHealth);
 		_hud->SetStateString("enemyTwoName", name);
 		_hud->SetStateString("enemyTwoHealth", maxHealthString);
-		idPlayer* player = gameLocal.GetLocalPlayer();
 		player->cogOneExists = 2;
 		player->textBoxString = player->textBoxString + "A " + name + " has spawned! \n";
 	}
-	
+	if (newName == "Rainmaker") {
+		player->textBoxString = player->textBoxString + "Watch out! The Rainmaker is a dangerous manager \n";
+	}
+	if (newName == "Multislacker") {
+		player->textBoxString = player->textBoxString + "Watch out! The Multislacker is a dangerous manager \n";
+	}
+	if (newName == "Major Player") {
+		player->textBoxString = player->textBoxString + "Watch out! The Major Player is a dangerous manager \n";
+	}
 }
 
 /*
@@ -240,7 +247,60 @@ void idCog::attack(idUserInterface* _hud) {
 		int damage = rand() % 15 + 1;
 		idStr dmgStr = "";
 		idStr toTextBox = "";
+		idPlayer* player = gameLocal.GetLocalPlayer();
 		sprintf(dmgStr, "%d", damage);
+		if (cheats == 1) {
+			toTextBox = toTextBox + "The Rainmaker is making it pour! \n";
+			toTextBox = toTextBox + "The Rainmaker gets another attack! \n";
+			damage = damage + rand() % 10 + 1;
+			sprintf(dmgStr, "%d", damage);
+			int attackChoiceTwo = rand() % 3 + 1;
+			if (attackChoiceTwo == 1) {
+				toTextBox = name + " used " + attackOne + " and dealt " + dmgStr + " damage. \n";
+			}
+			else if (attackChoiceTwo == 2) {
+				toTextBox = name + " used " + attackTwo + " and dealt " + dmgStr + " damage. \n";
+			}
+			else {
+				toTextBox = name + " used " + attackThree + " and dealt " + dmgStr + " damage. \n";
+			}
+			int downpour = rand() % 100 + 1;
+			if (downpour > 50) {
+				toTextBox = toTextBox + "The Rainmaker's storm won't let up! \n";
+				toTextBox = toTextBox + "The Rainmaker gets another attack! \n";
+				damage = damage + rand() % 10 + 1;
+				sprintf(dmgStr, "%d", damage);
+				int attackChoiceTwo = rand() % 3 + 1;
+				if (attackChoiceTwo == 1) {
+					toTextBox = name + " used " + attackOne + " and dealt " + dmgStr + " damage. \n";
+				}
+				else if (attackChoiceTwo == 2) {
+					toTextBox = name + " used " + attackTwo + " and dealt " + dmgStr + " damage. \n";
+				}
+				else {
+					toTextBox = name + " used " + attackThree + " and dealt " + dmgStr + " damage. \n";
+				}
+			}
+		}
+		if (cheats == 2) {
+			if (player->cogTwo.currentHealth == 0) {
+				toTextBox = toTextBox + "The Multislacker is too lazy! \n";
+				toTextBox = toTextBox + "The Multislacker summons a new bot to do his work! \n";
+				player->cogTwo.spawn(35, "Monoslacker", "Audit", "Tabulate", "Clip-On Tie", player->hud, 2, 0);
+			}
+		}
+		if (cheats == 3) {
+			if (currentHealth < 50) {
+				toTextBox = toTextBox + "The Major Player won't let you take his spotlight! \n";
+				int sadDmg = rand() % 20 + 1;
+				damage = damage + sadDmg;
+				idStr sadStr = "";
+				sprintf(sadStr, "%d", sadDmg);
+				sprintf(dmgStr, "%d", damage);
+				toTextBox = toTextBox + "The Major Player hits you with a massive Song and Dance! \n";
+				toTextBox = toTextBox + "You take " + sadStr + " damage from it! \n";
+			}
+		}
 		if (attackChoice == 1) {
 			toTextBox = name + " used " + attackOne + " and dealt " + dmgStr + " damage. \n";
 		}
@@ -250,7 +310,6 @@ void idCog::attack(idUserInterface* _hud) {
 		else {
 			toTextBox = name + " used " + attackThree + " and dealt " + dmgStr + " damage. \n";
 		}
-		idPlayer* player = gameLocal.GetLocalPlayer();
 		player->textBoxString = player->textBoxString + toTextBox;
 		player->Event_SetHealth(player->health - damage);
 	}
@@ -1147,6 +1206,64 @@ void idPlayer::weaponProcessing(int weaponFired) {
 		hud->SetStateInt("playerJBs", jellybeans);
 		waves = waves + 1;
 		hud->SetStateInt("waves", waves);
+		switch (waves) {
+			case 2:
+				cogOne.spawn(22, "Cold Caller", "Pound Key", "Freeze Assets", "Hot Air", hud, 1, 0);
+				cogTwo.spawn(22, "Short Change", "Pound Key", "Pickpocket", "Hot Air", hud, 2, 0);
+				break;
+			case 3:
+				cogOne.spawn(24, "Name Dropper", "Rolodex", "Synergy", "Razzle Dazzle", hud, 1, 0);
+				cogTwo.spawn(24, "Yesman", "Razzle Dazzle", "Synergy", "Fore", hud, 2, 0);
+				break;
+			case 4:
+				cogOne.spawn(26, "Penny Pincher", "Pickpocket", "Bounce check", "Finger Wag", hud, 1, 0);
+				cogTwo.spawn(26, "Double Talker", "Buzz Word", "Jargon", "Double Talk", hud, 2, 0);
+				break;
+			case 5:
+				cogOne.spawn(50, "Rainmaker", "Liquidate", "Freeze Assets", "Brainstorm", hud, 1, 1);
+				cogTwo.spawn(30, "Swindler", "Pickpocket", "Finger Wag", "Double Talk", hud, 2, 0);
+				break;
+			case 6:
+				cogOne.spawn(30, "Toxic Manager", "Acid Rain", "Power Trip", "Evil Eye", hud, 1, 0);
+				cogTwo.spawn(30, "Backstabber", "Guilt Trip", "Finger Wag", "Restraining Order", hud, 2, 0);
+				break;
+			case 7:
+				cogOne.spawn(32, "Mover and Shaker", "Quake", "Tremor", "Brainstorm", hud, 1, 0);
+				cogTwo.spawn(32, "Number Cruncher", "Crunch", "Tabulate", "Calculate", hud, 2, 0);
+				break;
+			case 8:
+				cogOne.spawn(34, "Downsizer", "Downsize", "Canned", "Pink Slip", hud, 1, 0);
+				cogTwo.spawn(34, "Glad Hander", "Fountain Pen", "Rubber Stamp", "Schmooze", hud, 2, 0);
+				break;
+			case 9:
+				cogOne.spawn(36, "Ambulance Chaser", "Shake", "Hang Up", "Red Tape", hud, 1, 0);
+				cogTwo.spawn(36, "Micromanager", "Fountain Pen", "Demotion", "Brain Storm", hud, 2, 0);
+				break;
+			case 10:
+				cogOne.spawn(75, "Multislacker", "Shake", "Hang Up", "Red Tape", hud, 1, 2);
+				cogTwo.spawn(35, "Monoslacker", "Audit", "Tabulate", "Clip-On Tie", hud, 2, 0);
+				break;
+			case 11:
+				cogOne.spawn(40, "Legal Eagle", "Pecking Order", "Evil Eye", "Jargon", hud, 1, 0);
+				cogTwo.spawn(40, "Loan Shark", "Fountain Pen", "Chomp", "Bite", hud, 2, 0);
+				break;
+			case 12:
+				cogOne.spawn(42, "Two-Face", "Re-Org", "Evil Eye", "Razzle Dazzle", hud, 1, 0);
+				cogTwo.spawn(42, "Spin Doctor", "Spin", "Quake", "Paradigm Shift", hud, 2, 0);
+				break;
+			case 13:
+				cogOne.spawn(45, "Big Cheese", "Fore", "Power Trip", "Cigar Smoke", hud, 1, 0);
+				cogTwo.spawn(45, "Big Wig", "Throw Book", "Jargon", "Power Trip", hud, 2, 0);
+				break;
+			case 14:
+				cogOne.spawn(45, "Robber Baron", "Synergy", "Cigar Smoke", "Fore", hud, 1, 0);
+				cogTwo.spawn(45, "Head Honcho", "Pink Slip", "Demotion", "Power Trip", hud, 2, 0);
+				break;
+			case 15:
+				cogOne.spawn(100, "Major Player", "Song and Dance", "Hot Air", "Quake", hud, 1, 3);
+				cogTwo.spawn(50, "Mr. Hollywood", "Song and Dance", "Power Trip", "Razzle Dazzle", hud, 2, 0);
+				break;
+		}
 	}
 	hud->SetStateString("textBoxText", textBoxString);
 	textBoxString = "";
@@ -9439,8 +9556,8 @@ void idPlayer::PerformImpulse( int impulse ) {
 			jellybeans = 0;
 			hud->SetStateString("playerJBs", "0");
 			textBoxString = "";
-			cogOne.spawn(20, "Flunky", "Watercooler", "Clip-on Tie", "Shredder", hud, 1);
-			cogTwo.spawn(20, "Tightwad", "Bounce Check", "Watercooler", "Freeze Assets", hud, 2);
+			cogOne.spawn(20, "Flunky", "Watercooler", "Clip-on Tie", "Shredder", hud, 1, 0);
+			cogTwo.spawn(20, "Tightwad", "Bounce Check", "Watercooler", "Freeze Assets", hud, 2, 0);
 			hud->SetStateString("textBoxText", textBoxString);
 			break;
 		}
