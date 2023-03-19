@@ -249,11 +249,22 @@ void idCog::attack(idUserInterface* _hud) {
 		idStr toTextBox = "";
 		idPlayer* player = gameLocal.GetLocalPlayer();
 		sprintf(dmgStr, "%d", damage);
+		if (attackChoice == 1) {
+			toTextBox = toTextBox + name + " used " + attackOne + " and dealt " + dmgStr + " damage. \n";
+		}
+		else if (attackChoice == 2) {
+			toTextBox = toTextBox + name + " used " + attackTwo + " and dealt " + dmgStr + " damage. \n";
+		}
+		else {
+			toTextBox = toTextBox + name + " used " + attackThree + " and dealt " + dmgStr + " damage. \n";
+		}
 		if (cheats == 1) {
 			toTextBox = toTextBox + "The Rainmaker is making it pour! \n";
 			toTextBox = toTextBox + "The Rainmaker gets another attack! \n";
-			damage = damage + rand() % 8 + 1;
-			sprintf(dmgStr, "%d", damage);
+			int pourDmg = rand() % 8 + 1;
+			damage = damage + pourDmg;
+			dmgStr = "";
+			sprintf(dmgStr, "%d", pourDmg);
 			int attackChoiceTwo = rand() % 3 + 1;
 			if (attackChoiceTwo == 1) {
 				toTextBox = toTextBox + name + " used " + attackOne + " and dealt " + dmgStr + " damage. \n";
@@ -268,8 +279,10 @@ void idCog::attack(idUserInterface* _hud) {
 			if (downpour > 50) {
 				toTextBox = toTextBox + "The Rainmaker's storm won't let up! \n";
 				toTextBox = toTextBox + "The Rainmaker gets another attack! \n";
-				damage = damage + rand() % 8 + 1;
-				sprintf(dmgStr, "%d", damage);
+				int stormDmg = rand() % 8 + 1;
+				damage =  + damage + stormDmg;
+				dmgStr = "";
+				sprintf(dmgStr, "%d", stormDmg);
 				int attackChoiceTwo = rand() % 3 + 1;
 				if (attackChoiceTwo == 1) {
 					toTextBox = toTextBox + name + " used " + attackOne + " and dealt " + dmgStr + " damage. \n";
@@ -286,6 +299,8 @@ void idCog::attack(idUserInterface* _hud) {
 			if (player->cogTwo.currentHealth == 0) {
 				toTextBox = toTextBox + "The Multislacker is too lazy! \n";
 				toTextBox = toTextBox + "The Multislacker summons a new bot to do his work! \n";
+				player->textBoxString = player->textBoxString + toTextBox;
+				toTextBox = "";
 				player->cogTwo.spawn(35, "Monoslacker", "Audit", "Tabulate", "Clip-On Tie", player->hud, 2, 0);
 			}
 		}
@@ -301,15 +316,7 @@ void idCog::attack(idUserInterface* _hud) {
 				toTextBox = toTextBox + "You take " + sadStr + " damage from it! \n";
 			}
 		}
-		if (attackChoice == 1) {
-			toTextBox = toTextBox + name + " used " + attackOne + " and dealt " + dmgStr + " damage. \n";
-		}
-		else if (attackChoice == 2) {
-			toTextBox = toTextBox + name + " used " + attackTwo + " and dealt " + dmgStr + " damage. \n";
-		}
-		else {
-			toTextBox = toTextBox + name + " used " + attackThree + " and dealt " + dmgStr + " damage. \n";
-		}
+		
 		player->textBoxString = player->textBoxString + toTextBox;
 		player->Event_SetHealth(player->health - damage);
 	}
@@ -1306,6 +1313,9 @@ idPlayer::doToonUp
 ===============
 */
 void idPlayer::doToonUp() {
+	if (inventory.toonUpExp > 10000) {
+		inventory.toonUpExp = 0;
+	}
 	if (inventory.toonUpExp >= 3) {
 		idPlayer* player = gameLocal.GetLocalPlayer();
 		player->Event_SetHealth(player->health + 50);
@@ -1325,6 +1335,9 @@ idPlayer::doTrap
 ===============
 */
 void idPlayer::doTrap() {
+	if (inventory.trapExp > 10000) {
+		inventory.trapExp = 0;
+	}
 	if (target == 1 && cogOne.currentHealth > 0 && cogOne.trapped == 0) {
 		if (inventory.trapExp >= 3) {
 			cogOne.trapped = 40;
@@ -1351,6 +1364,9 @@ idPlayer::doLure
 ===============
 */
 void idPlayer::doLure() {
+	if (inventory.lureExp > 10000) {
+		inventory.lureExp = 0;
+	}
 	if (accRoll <= 25) {
 		textBoxString = textBoxString + "Your lure missed! \n";
 	}
@@ -1397,6 +1413,9 @@ idPlayer::doThrow
 ===============
 */
 void idPlayer::doThrow() {
+	if (inventory.throwExp > 10000) {
+		inventory.throwExp = 0;
+	}
 	if (accRoll <= 20) {
 		textBoxString = textBoxString + "Your throw missed! \n";
 	}
@@ -1453,6 +1472,9 @@ idPlayer::doSquirt
 ===============
 */
 void idPlayer::doSquirt() {
+	if (inventory.squirtExp > 10000) {
+		inventory.squirtExp = 0;
+	}
 	if (accRoll <= 5) {
 		textBoxString = textBoxString + "Your squirt missed! \n";
 	}
@@ -1515,6 +1537,9 @@ idPlayer::doZap
 ===============
 */
 void idPlayer::doZap() {
+	if (inventory.zapExp > 10000) {
+		inventory.zapExp = 0;
+	}
 	if (target == 1 && cogOne.currentHealth > 0) {
 		if (cogOne.soaked == 0) {
 			textBoxString = textBoxString + cogOne.name + " is not soaked! \n";
@@ -1592,7 +1617,9 @@ idPlayer::doSound
 ===============
 */
 void idPlayer::doSound() {
-	
+	if (inventory.soundExp > 10000) {
+		inventory.soundExp = 0;
+	}
 	idStr damageString = "";
 	int damage = 0;
 	if (inventory.soundExp >= 3) {
@@ -1647,7 +1674,9 @@ idPlayer::doDrop
 ===============
 */
 void idPlayer::doDrop() {
-	
+	if (inventory.dropExp > 10000) {
+		inventory.dropExp = 0;
+	}
 	if (accRoll <= 35) {
 		textBoxString = textBoxString + "Your drop missed! \n";
 	}
@@ -1690,7 +1719,7 @@ idPlayer::doDoodle
 ===============
 */
 void idPlayer::doDoodle() {
-	if (inventory.doodleExp == 0) {
+	if (inventory.doodleExp == 0 || inventory.doodleExp > 5) {
 		textBoxString = textBoxString + "You don't have a doodle! \n";
 		//idPlayer* player = gameLocal.GetLocalPlayer();
 		//player->Event_SetHealth(player->health + 40);
@@ -1797,18 +1826,20 @@ idPlayer::doDice
 ===============
 */
 void idPlayer::doDice() {
-	
+	if (inventory.diceExp > 10000) {
+		inventory.diceExp = 0;
+	}
 	int diceDamage = 0;
 	idStr diceString = "";
 	if (inventory.diceExp >= 3) {
 		diceDamage = rand() % 40 + 1;
 		sprintf(diceString, "%d", diceDamage);
 		if (target == 1 && cogOne.currentHealth > 0) {
-			textBoxString = textBoxString + cogOne.name + " has taken " + diceString + " points of dice damage!";
+			textBoxString = textBoxString + cogOne.name + " has taken " + diceString + " points of dice damage! \n";
 			cogOne.takeDamage(diceDamage, hud);
 		}
 		else if (target == 2 && cogTwo.currentHealth > 0) {
-			textBoxString = textBoxString + cogTwo.name + " has taken " + diceString + " points of dice damage!";
+			textBoxString = textBoxString + cogTwo.name + " has taken " + diceString + " points of dice damage! \n";
 			cogTwo.takeDamage(diceDamage, hud);
 		}
 	}
@@ -1816,11 +1847,11 @@ void idPlayer::doDice() {
 		diceDamage = rand() % 20 + 1;
 		sprintf(diceString, "%d", diceDamage);
 		if (target == 1 && cogOne.currentHealth > 0) {
-			textBoxString = textBoxString + cogOne.name + " has taken " + diceString + " points of dice damage!";
+			textBoxString = textBoxString + cogOne.name + " has taken " + diceString + " points of dice damage! \n";
 			cogOne.takeDamage(diceDamage, hud);
 		}
 		else if (target == 2 && cogTwo.currentHealth > 0) {
-			textBoxString = textBoxString + cogTwo.name + " has taken " + diceString + " points of dice damage!";
+			textBoxString = textBoxString + cogTwo.name + " has taken " + diceString + " points of dice damage! \n";
 			cogTwo.takeDamage(diceDamage, hud);
 		}
 	}
