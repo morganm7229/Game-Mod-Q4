@@ -225,13 +225,13 @@ void idCog::spawn(int newMaxHealth, idStr newName, idStr newAttackOne, idStr new
 		player->cogOneExists = 2;
 		player->textBoxString = player->textBoxString + "A " + name + " has spawned! \n";
 	}
-	if (newName == "Rainmaker") {
+	if (newCheats == 1) {
 		player->textBoxString = player->textBoxString + "Watch out! The Rainmaker is a dangerous manager \n";
 	}
-	if (newName == "Multislacker") {
+	if (newCheats == 2) {
 		player->textBoxString = player->textBoxString + "Watch out! The Multislacker is a dangerous manager \n";
 	}
-	if (newName == "Major Player") {
+	if (newCheats == 3) {
 		player->textBoxString = player->textBoxString + "Watch out! The Major Player is a dangerous manager \n";
 	}
 }
@@ -244,7 +244,7 @@ idCog::Attack
 void idCog::attack(idUserInterface* _hud) {
 	if (currentHealth > 0) {
 		int attackChoice = rand() % 3 + 1;
-		int damage = rand() % 15 + 1;
+		int damage = rand() % 10 + 1;
 		idStr dmgStr = "";
 		idStr toTextBox = "";
 		idPlayer* player = gameLocal.GetLocalPlayer();
@@ -252,33 +252,33 @@ void idCog::attack(idUserInterface* _hud) {
 		if (cheats == 1) {
 			toTextBox = toTextBox + "The Rainmaker is making it pour! \n";
 			toTextBox = toTextBox + "The Rainmaker gets another attack! \n";
-			damage = damage + rand() % 10 + 1;
+			damage = damage + rand() % 8 + 1;
 			sprintf(dmgStr, "%d", damage);
 			int attackChoiceTwo = rand() % 3 + 1;
 			if (attackChoiceTwo == 1) {
-				toTextBox = name + " used " + attackOne + " and dealt " + dmgStr + " damage. \n";
+				toTextBox = toTextBox + name + " used " + attackOne + " and dealt " + dmgStr + " damage. \n";
 			}
 			else if (attackChoiceTwo == 2) {
-				toTextBox = name + " used " + attackTwo + " and dealt " + dmgStr + " damage. \n";
+				toTextBox = toTextBox + name + " used " + attackTwo + " and dealt " + dmgStr + " damage. \n";
 			}
 			else {
-				toTextBox = name + " used " + attackThree + " and dealt " + dmgStr + " damage. \n";
+				toTextBox = toTextBox + name + " used " + attackThree + " and dealt " + dmgStr + " damage. \n";
 			}
 			int downpour = rand() % 100 + 1;
 			if (downpour > 50) {
 				toTextBox = toTextBox + "The Rainmaker's storm won't let up! \n";
 				toTextBox = toTextBox + "The Rainmaker gets another attack! \n";
-				damage = damage + rand() % 10 + 1;
+				damage = damage + rand() % 8 + 1;
 				sprintf(dmgStr, "%d", damage);
 				int attackChoiceTwo = rand() % 3 + 1;
 				if (attackChoiceTwo == 1) {
-					toTextBox = name + " used " + attackOne + " and dealt " + dmgStr + " damage. \n";
+					toTextBox = toTextBox + name + " used " + attackOne + " and dealt " + dmgStr + " damage. \n";
 				}
 				else if (attackChoiceTwo == 2) {
-					toTextBox = name + " used " + attackTwo + " and dealt " + dmgStr + " damage. \n";
+					toTextBox = toTextBox + name + " used " + attackTwo + " and dealt " + dmgStr + " damage. \n";
 				}
 				else {
-					toTextBox = name + " used " + attackThree + " and dealt " + dmgStr + " damage. \n";
+					toTextBox = toTextBox + name + " used " + attackThree + " and dealt " + dmgStr + " damage. \n";
 				}
 			}
 		}
@@ -302,13 +302,13 @@ void idCog::attack(idUserInterface* _hud) {
 			}
 		}
 		if (attackChoice == 1) {
-			toTextBox = name + " used " + attackOne + " and dealt " + dmgStr + " damage. \n";
+			toTextBox = toTextBox + name + " used " + attackOne + " and dealt " + dmgStr + " damage. \n";
 		}
 		else if (attackChoice == 2) {
-			toTextBox = name + " used " + attackTwo + " and dealt " + dmgStr + " damage. \n";
+			toTextBox = toTextBox + name + " used " + attackTwo + " and dealt " + dmgStr + " damage. \n";
 		}
 		else {
-			toTextBox = name + " used " + attackThree + " and dealt " + dmgStr + " damage. \n";
+			toTextBox = toTextBox + name + " used " + attackThree + " and dealt " + dmgStr + " damage. \n";
 		}
 		player->textBoxString = player->textBoxString + toTextBox;
 		player->Event_SetHealth(player->health - damage);
@@ -1191,7 +1191,7 @@ void idPlayer::weaponProcessing(int weaponFired) {
 			doDoodle();
 			break;
 		case 8:
-			inventory.addDiceExp(hud);
+			doDice();
 			break;
 	}
 	for (int i = 0; i < MAX_AMMOTYPES; i++) {
@@ -1210,58 +1210,89 @@ void idPlayer::weaponProcessing(int weaponFired) {
 			case 2:
 				cogOne.spawn(22, "Cold Caller", "Pound Key", "Freeze Assets", "Hot Air", hud, 1, 0);
 				cogTwo.spawn(22, "Short Change", "Pound Key", "Pickpocket", "Hot Air", hud, 2, 0);
+				Event_SetHealth(100);
+				textBoxString = textBoxString + "You have been healed to full health! \n";
 				break;
 			case 3:
 				cogOne.spawn(24, "Name Dropper", "Rolodex", "Synergy", "Razzle Dazzle", hud, 1, 0);
 				cogTwo.spawn(24, "Yesman", "Razzle Dazzle", "Synergy", "Fore", hud, 2, 0);
+				Event_SetHealth(100);
+				textBoxString = textBoxString + "You have been healed to full health! \n";
 				break;
 			case 4:
 				cogOne.spawn(26, "Penny Pincher", "Pickpocket", "Bounce check", "Finger Wag", hud, 1, 0);
 				cogTwo.spawn(26, "Double Talker", "Buzz Word", "Jargon", "Double Talk", hud, 2, 0);
+				Event_SetHealth(100);
+				textBoxString = textBoxString + "You have been healed to full health! \n";
 				break;
 			case 5:
 				cogOne.spawn(50, "Rainmaker", "Liquidate", "Freeze Assets", "Brainstorm", hud, 1, 1);
 				cogTwo.spawn(30, "Swindler", "Pickpocket", "Finger Wag", "Double Talk", hud, 2, 0);
+				Event_SetHealth(100);
+				textBoxString = textBoxString + "You have been healed to full health! \n";
 				break;
 			case 6:
 				cogOne.spawn(30, "Toxic Manager", "Acid Rain", "Power Trip", "Evil Eye", hud, 1, 0);
 				cogTwo.spawn(30, "Backstabber", "Guilt Trip", "Finger Wag", "Restraining Order", hud, 2, 0);
+				Event_SetHealth(100);
+				textBoxString = textBoxString + "You have been healed to full health! \n";
 				break;
 			case 7:
 				cogOne.spawn(32, "Mover and Shaker", "Quake", "Tremor", "Brainstorm", hud, 1, 0);
 				cogTwo.spawn(32, "Number Cruncher", "Crunch", "Tabulate", "Calculate", hud, 2, 0);
+				Event_SetHealth(100);
+				textBoxString = textBoxString + "You have been healed to full health! \n";
 				break;
 			case 8:
 				cogOne.spawn(34, "Downsizer", "Downsize", "Canned", "Pink Slip", hud, 1, 0);
 				cogTwo.spawn(34, "Glad Hander", "Fountain Pen", "Rubber Stamp", "Schmooze", hud, 2, 0);
+				Event_SetHealth(100);
+				textBoxString = textBoxString + "You have been healed to full health! \n";
 				break;
 			case 9:
 				cogOne.spawn(36, "Ambulance Chaser", "Shake", "Hang Up", "Red Tape", hud, 1, 0);
 				cogTwo.spawn(36, "Micromanager", "Fountain Pen", "Demotion", "Brain Storm", hud, 2, 0);
+				Event_SetHealth(100);
+				textBoxString = textBoxString + "You have been healed to full health! \n";
 				break;
 			case 10:
 				cogOne.spawn(75, "Multislacker", "Shake", "Hang Up", "Red Tape", hud, 1, 2);
 				cogTwo.spawn(35, "Monoslacker", "Audit", "Tabulate", "Clip-On Tie", hud, 2, 0);
+				Event_SetHealth(100);
+				textBoxString = textBoxString + "You have been healed to full health! \n";
 				break;
 			case 11:
 				cogOne.spawn(40, "Legal Eagle", "Pecking Order", "Evil Eye", "Jargon", hud, 1, 0);
 				cogTwo.spawn(40, "Loan Shark", "Fountain Pen", "Chomp", "Bite", hud, 2, 0);
+				Event_SetHealth(100);
+				textBoxString = textBoxString + "You have been healed to full health! \n";
 				break;
 			case 12:
 				cogOne.spawn(42, "Two-Face", "Re-Org", "Evil Eye", "Razzle Dazzle", hud, 1, 0);
 				cogTwo.spawn(42, "Spin Doctor", "Spin", "Quake", "Paradigm Shift", hud, 2, 0);
+				Event_SetHealth(100);
+				textBoxString = textBoxString + "You have been healed to full health! \n";
 				break;
 			case 13:
 				cogOne.spawn(45, "Big Cheese", "Fore", "Power Trip", "Cigar Smoke", hud, 1, 0);
 				cogTwo.spawn(45, "Big Wig", "Throw Book", "Jargon", "Power Trip", hud, 2, 0);
+				Event_SetHealth(100);
+				textBoxString = textBoxString + "You have been healed to full health! \n";
 				break;
 			case 14:
 				cogOne.spawn(45, "Robber Baron", "Synergy", "Cigar Smoke", "Fore", hud, 1, 0);
 				cogTwo.spawn(45, "Head Honcho", "Pink Slip", "Demotion", "Power Trip", hud, 2, 0);
+				Event_SetHealth(100);
+				textBoxString = textBoxString + "You have been healed to full health! \n";
 				break;
 			case 15:
 				cogOne.spawn(100, "Major Player", "Song and Dance", "Hot Air", "Quake", hud, 1, 3);
 				cogTwo.spawn(50, "Mr. Hollywood", "Song and Dance", "Power Trip", "Razzle Dazzle", hud, 2, 0);
+				Event_SetHealth(100);
+				textBoxString = textBoxString + "You have been healed to full health! \n";
+				break;
+			case 16:
+				textBoxString = "You win!";
 				break;
 		}
 	}
@@ -1275,17 +1306,17 @@ idPlayer::doToonUp
 ===============
 */
 void idPlayer::doToonUp() {
-	inventory.addToonUpExp(hud);
 	if (inventory.toonUpExp >= 3) {
 		idPlayer* player = gameLocal.GetLocalPlayer();
-		player->Event_SetHealth(player->health + 40);
-		textBoxString = textBoxString + "You have been healed for 40 hp! \n";
+		player->Event_SetHealth(player->health + 50);
+		textBoxString = textBoxString + "You have been healed for 50 hp! \n";
 	}
 	else {
 		idPlayer* player = gameLocal.GetLocalPlayer();
-		player->Event_SetHealth(player->health + 20);
-		textBoxString = textBoxString + "You have been healed for 20 hp! \n";
+		player->Event_SetHealth(player->health + 25);
+		textBoxString = textBoxString + "You have been healed for 25 hp! \n";
 	}
+	inventory.addToonUpExp(hud);
 }
 
 /*
@@ -1294,7 +1325,6 @@ idPlayer::doTrap
 ===============
 */
 void idPlayer::doTrap() {
-	inventory.addTrapExp(hud);
 	if (target == 1 && cogOne.currentHealth > 0 && cogOne.trapped == 0) {
 		if (inventory.trapExp >= 3) {
 			cogOne.trapped = 40;
@@ -1313,6 +1343,7 @@ void idPlayer::doTrap() {
 		}
 		textBoxString = textBoxString + cogTwo.name + " has been trapped! \n";
 	}
+	inventory.addTrapExp(hud);
 }
 /*
 ===============
@@ -1320,8 +1351,6 @@ idPlayer::doLure
 ===============
 */
 void idPlayer::doLure() {
-	inventory.addLureExp(hud);
-
 	if (accRoll <= 25) {
 		textBoxString = textBoxString + "Your lure missed! \n";
 	}
@@ -1331,6 +1360,7 @@ void idPlayer::doLure() {
 		sprintf(damageString, "%d", cogOne.trapped);
 		textBoxString = textBoxString + cogOne.name + " has taken " + damageString + " points of trap damage! \n";
 		cogOne.trapped = 0;
+		inventory.addLureExp(hud);
 	}
 	else if (target == 1 && cogOne.currentHealth > 0) {
 		textBoxString = textBoxString + cogOne.name + " has been lured! \n";
@@ -1340,6 +1370,7 @@ void idPlayer::doLure() {
 		else {
 			cogOne.lured = 8;
 		}
+		inventory.addLureExp(hud);
 	}
 	else if (target == 2 && cogTwo.currentHealth > 0 && cogTwo.trapped > 0) {
 		cogTwo.takeDamage(cogTwo.trapped, hud);
@@ -1347,6 +1378,7 @@ void idPlayer::doLure() {
 		sprintf(damageString, "%d", cogTwo.trapped);
 		textBoxString = textBoxString + cogTwo.name + " has taken " + damageString + " points of trap damage! \n";
 		cogTwo.trapped = 0;
+		inventory.addLureExp(hud);
 	}
 	else if (target == 2 && cogTwo.currentHealth > 0) {
 		textBoxString = textBoxString + cogTwo.name + " has been lured! \n";
@@ -1356,6 +1388,7 @@ void idPlayer::doLure() {
 		else {
 			cogTwo.lured = 7;
 		}
+		inventory.addLureExp(hud);
 	}
 }
 /*
@@ -1364,7 +1397,6 @@ idPlayer::doThrow
 ===============
 */
 void idPlayer::doThrow() {
-	inventory.addThrowExp(hud);
 	if (accRoll <= 20) {
 		textBoxString = textBoxString + "Your throw missed! \n";
 	}
@@ -1389,6 +1421,7 @@ void idPlayer::doThrow() {
 		}
 		cogOne.lured = 0;
 		cogOne.takeDamage(damage, hud);
+		inventory.addThrowExp(hud);
 	}
 	else if (target == 2 && cogTwo.currentHealth > 0) {
 		idStr damageString = "";
@@ -1411,6 +1444,7 @@ void idPlayer::doThrow() {
 		}
 		cogTwo.lured = 0;
 		cogTwo.takeDamage(damage, hud);
+		inventory.addThrowExp(hud);
 	}
 }
 /*
@@ -1419,7 +1453,6 @@ idPlayer::doSquirt
 ===============
 */
 void idPlayer::doSquirt() {
-	inventory.addSquirtExp(hud);
 	if (accRoll <= 5) {
 		textBoxString = textBoxString + "Your squirt missed! \n";
 	}
@@ -1447,6 +1480,7 @@ void idPlayer::doSquirt() {
 		cogTwo.soaked = 1;
 		textBoxString = textBoxString + "All cogs on the field have been soaked! \n";
 		cogOne.takeDamage(damage, hud);
+		inventory.addSquirtExp(hud);
 	}
 	else if (target == 2 && cogTwo.currentHealth > 0) {
 		idStr damageString = "";
@@ -1472,6 +1506,7 @@ void idPlayer::doSquirt() {
 		cogTwo.soaked = 1;
 		textBoxString = textBoxString + "All cogs on the field have been soaked! \n";
 		cogOne.takeDamage(damage, hud);
+		inventory.addSquirtExp(hud);
 	}
 }
 /*
@@ -1485,7 +1520,6 @@ void idPlayer::doZap() {
 			textBoxString = textBoxString + cogOne.name + " is not soaked! \n";
 		}
 		else {
-			inventory.addZapExp(hud);
 			idStr damageString = "";
 			int damage = 0;
 			if (inventory.zapExp >= 3) {
@@ -1513,6 +1547,7 @@ void idPlayer::doZap() {
 			cogTwo.lured = 0;
 			cogOne.soaked = 0;
 			cogTwo.soaked = 0;
+			inventory.addZapExp(hud);
 		}
 	}
 	else if (target == 2 && cogTwo.currentHealth > 0) {
@@ -1520,7 +1555,6 @@ void idPlayer::doZap() {
 			textBoxString = textBoxString + cogTwo.name + " is not soaked! \n";
 		}
 		else {
-			inventory.addZapExp(hud);
 			idStr damageString = "";
 			int damage = 0;
 			if (inventory.zapExp >= 3) {
@@ -1548,6 +1582,7 @@ void idPlayer::doZap() {
 			cogTwo.lured = 0;
 			cogOne.soaked = 0;
 			cogTwo.soaked = 0;
+			inventory.addZapExp(hud);
 		}
 	}
 }
@@ -1557,7 +1592,7 @@ idPlayer::doSound
 ===============
 */
 void idPlayer::doSound() {
-	inventory.addSoundExp(hud);
+	
 	idStr damageString = "";
 	int damage = 0;
 	if (inventory.soundExp >= 3) {
@@ -1604,6 +1639,7 @@ void idPlayer::doSound() {
 	textBoxString = textBoxString + "All cogs are no longer lured! \n";
 	cogOne.lured = 0;
 	cogTwo.lured = 0;
+	inventory.addSoundExp(hud);
 }
 /*
 ===============
@@ -1611,7 +1647,7 @@ idPlayer::doDrop
 ===============
 */
 void idPlayer::doDrop() {
-	inventory.addDropExp(hud);
+	
 	if (accRoll <= 35) {
 		textBoxString = textBoxString + "Your drop missed! \n";
 	}
@@ -1629,6 +1665,7 @@ void idPlayer::doDrop() {
 		textBoxString = textBoxString + cogOne.name + " is unlured if it was lured! \n";
 		cogOne.lured = 0;
 		cogOne.takeDamage(damage, hud);
+		inventory.addDropExp(hud);
 	}
 	else if (target == 2 && cogTwo.currentHealth > 0) {
 		idStr damageString = "";
@@ -1644,6 +1681,7 @@ void idPlayer::doDrop() {
 		textBoxString = textBoxString + cogTwo.name + " is unlured if it was lured! \n";
 		cogTwo.lured = 0;
 		cogTwo.takeDamage(damage, hud);
+		inventory.addDropExp(hud);
 	}
 }
 /*
@@ -1759,7 +1797,7 @@ idPlayer::doDice
 ===============
 */
 void idPlayer::doDice() {
-	inventory.addDiceExp(hud);
+	
 	int diceDamage = 0;
 	idStr diceString = "";
 	if (inventory.diceExp >= 3) {
@@ -1786,6 +1824,7 @@ void idPlayer::doDice() {
 			cogTwo.takeDamage(diceDamage, hud);
 		}
 	}
+	inventory.addDiceExp(hud);
 }
 /*
 ===============
@@ -9656,10 +9695,13 @@ void idPlayer::PerformImpulse( int impulse ) {
 			break;
 		}
 		case IMPULSE_49: {
-			textBoxString = "Press P to start! Ignore the lightning gun, it does not do anything. \n";
-			textBoxString = textBoxString + "Starting with the blaster (and ignoring the lightning gun \n";
-			textBoxString = textBoxString + "The blaster represents toonup, then the smg trap, etc, and shooting it uses it \n";
-			textBoxString = textBoxString + "To bring up the pet shop, press l";
+			textBoxString = "Press P to start! Ignore the lightning gun if it shows up, it does not do anything. \n";
+			textBoxString = textBoxString + "Hit L to bring up the pet shop menu - hit the letter assoc. with a pet to buy it\n";
+			textBoxString = textBoxString + "The game has 15 waves, bosses every 5 \n";
+			textBoxString = textBoxString + "Shoot your gun to take your turn, afterwards the enemies immediately do their turn \n";
+			textBoxString = textBoxString + "Hit k to switch targets, 1 is left 2 is right \n";
+			textBoxString = textBoxString + "Once a gag track hits 3 experience points, it upgrades \n";
+			textBoxString = textBoxString + "For more information on the individual tracks, check the ReadMe \n";
 			hud->SetStateString("textBoxText", textBoxString);
 			break;
 		}
