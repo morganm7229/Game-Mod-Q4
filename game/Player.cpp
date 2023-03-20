@@ -9715,7 +9715,7 @@ void idPlayer::PerformImpulse( int impulse ) {
 			if (jellybeans >= 40) {
 				inventory.doodleExp = 5;
 				textBoxString = "You have purchased Doogis!";
-				jellybeans = jellybeans - 20;
+				jellybeans = jellybeans - 40;
 				hud->SetStateInt("doodlePoints", 5);
 			}
 			else {
